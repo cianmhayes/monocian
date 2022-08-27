@@ -4,7 +4,6 @@
 #include <iterator>
 #include <list>
 #include <memory>
-#include <unordered_set>
 
 #include "base/merge.h"
 
@@ -54,8 +53,8 @@ std::unique_ptr<Graph> Graph::GetMinimumSpanningTree() const {
                                               std::vector<NodeEdge>()));
   }
   for (const auto& edge : edges_) {
-    graphs = Merge<std::unique_ptr<base::Graph>>(
-        std::move(graphs),
+    Merge<std::unique_ptr<base::Graph>>(
+        graphs,
         [&edge](const std::unique_ptr<Graph>& g) {
           return g->ContainsNode(edge.first) || g->ContainsNode(edge.second);
         },
@@ -63,8 +62,7 @@ std::unique_ptr<Graph> Graph::GetMinimumSpanningTree() const {
           base::Graph* g1 = mergable.front().get();
           base::Graph* g2 = mergable.back().get();
           return std::make_unique<base::Graph>(*g1, *g2, edge);
-        },
-        2);
+        });
     if (graphs.size() == 1) {
       return std::move(graphs.front());
     }

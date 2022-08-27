@@ -20,7 +20,7 @@ TEST(SelectiveSearchTest, IntSearch) {
       });
   auto components = selective_search::SelectiveSearch(
       *g.get(),
-      [](const selective_search::Component& c) { return 0.5f / (c.Size() + 1); });
+      [](const selective_search::Component& c) { return 0.5f / (c.component_size + 1); });
 
   EXPECT_EQ(components.size(), 5);
 }
