@@ -5,6 +5,4 @@ add_library(
   selective_search.cc
 )
 
-target_compile_features(selective_search PRIVATE cxx_std_17)
-
 target_include_directories(selective_search PUBLIC ..)

@@ -1,0 +1,9 @@
+{
+    "connection_string":"",
+    "container_name":"",
+    "blob_root":"",
+    "write_to_file":"",
+    "write_to_service":"",
+    "depth_bitrate_bps": "",
+    "color_birate_bps": ""
+}

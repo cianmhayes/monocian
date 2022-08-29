@@ -9,8 +9,6 @@ add_executable(
   selective_search/selective_search_test.cc
 )
 
-target_compile_features(unit_tests PRIVATE cxx_std_17)
-
 target_link_libraries(
   unit_tests
   GTest::gtest_main

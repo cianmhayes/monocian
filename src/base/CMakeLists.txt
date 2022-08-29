@@ -5,6 +5,4 @@ add_library(
   graph.cc
 )
 
-target_compile_features(base PRIVATE cxx_std_17)
-
 target_include_directories(base PUBLIC ..)
