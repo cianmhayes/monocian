@@ -6,12 +6,17 @@
 
 class Camera {
  public:
+  Camera(glm::vec3&& pos);
   Camera(glm::vec3&& pos, glm::vec3&& front, glm::vec3&& up);
   ~Camera();
   Camera(const Camera&) = delete;
   Camera& operator=(const Camera&) = delete;
 
-  void ProcessDirectionKeys(bool forward, bool back, bool left, bool right, float camera_speed);
+  void ProcessDirectionKeys(bool forward,
+                            bool back,
+                            bool left,
+                            bool right,
+                            float camera_speed);
 
   void ProcessMouseInput(double xpos, double ypos);
 

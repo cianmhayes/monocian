@@ -98,11 +98,9 @@ int main() {
         glViewport(0, 0, width, height);
       });
 
-  auto cam = std::make_unique<Camera>(glm::vec3(0.0f, 0.0f, 3.0f),
-                                      glm::vec3(0.0f, 0.0f, -1.0f),
-                                      glm::vec3(0.0f, 1.0f, 0.0f));
+  auto cam = std::make_unique<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
 
-  // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  window.SetMouseCursorMode(MouseCursorMode::kDisabled);
   Camera* camera_ptr = cam.get();
   window.AddMouseMovementCallback(
       [&camera_ptr](Window* w, double x_position, double y_position) {
@@ -110,8 +108,7 @@ int main() {
       });
 
   Resource vertex_shader = LOAD_RESOURCE(common_vertex_glsl);
-  Resource light_source_fragment_shader =
-      LOAD_RESOURCE(light_source_frag_glsl);
+  Resource light_source_fragment_shader = LOAD_RESOURCE(light_source_frag_glsl);
   Resource lit_object_fragment_shader = LOAD_RESOURCE(lit_object_frag_glsl);
   auto lit_shader = std::make_unique<Shader>(
       vertex_shader.ToString(), lit_object_fragment_shader.ToString());
@@ -139,19 +136,17 @@ int main() {
   glm::mat4 light_transform(1.0f);
   light_transform = glm::translate(light_transform, light_pos);
 
-  float delta_time = 0.0f;
-  float last_frame = glfwGetTime();
-  while (window) {
-    if (window.IsKeyPressed(GLFW_KEY_ESCAPE))
+  while (window.FrameStart()) {
+    if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
       window.SetShouldClose(true);
-    float current_frame = glfwGetTime();
-    delta_time = current_frame - last_frame;
-    last_frame = current_frame;
-    float camera_speed = 2.0f * delta_time;
+      continue;
+    }
+
+    float camera_speed = 2.0f * window.GetLastFrameDuration();
     cam->ProcessDirectionKeys(window.IsKeyPressed(GLFW_KEY_W),
                               window.IsKeyPressed(GLFW_KEY_S),
                               window.IsKeyPressed(GLFW_KEY_A),
-                              window.IsKeyPressed(GLFW_KEY_D), delta_time);
+                              window.IsKeyPressed(GLFW_KEY_D), camera_speed);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -179,9 +174,6 @@ int main() {
     light_source_shader->set_mat4f("view", cam->GetViewMatrix());
     glBindVertexArray(light);
     glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    window.SwapBuffers();
-    glfwPollEvents();
   }
   return 0;
 }

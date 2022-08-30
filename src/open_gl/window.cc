@@ -49,6 +49,8 @@ Window::Window(int width, int height, std::string title, bool resizable) {
                           Window* this_w = (Window*)glfwGetWindowUserPointer(w);
                           this_w->NotifyMouseScrollCallbacks(xoffset, yoffset);
                         });
+  frame_start_ = glfwGetTime();
+  last_frame_duration_ = 0.0f;
 };
 
 Window::~Window() {
@@ -57,7 +59,7 @@ Window::~Window() {
 };
 
 bool Window::IsValid() const {
-  return !!glfw_window_;
+  return glfw_window_ != 0;
 }
 
 bool Window::ShouldClose() const {
@@ -74,6 +76,48 @@ void Window::SwapBuffers() {
 
 bool Window::IsKeyPressed(int32_t key) {
   return glfwGetKey(glfw_window_, key) == GLFW_PRESS;
+}
+
+void Window::SetMouseCursorMode(MouseCursorMode mode) {
+  switch (mode) {
+    case MouseCursorMode::kHidden:
+      glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+      break;
+    case MouseCursorMode::kDisabled:
+      glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+      break;
+    default:
+      glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+      break;
+  }
+}
+
+bool Window::FrameStart() {
+  if (!IsValid()) {
+    return false;
+  }
+  if (frame_started_) {
+    FrameEnd();
+  }
+  float last_frame_start = frame_start_;
+  frame_start_ = glfwGetTime();
+  last_frame_duration_ = frame_start_ - last_frame_start;
+  frame_started_ = true;
+  return !ShouldClose();
+}
+
+void Window::FrameEnd() {
+  SwapBuffers();
+  glfwPollEvents();
+  frame_started_ = false;
+}
+
+float Window::GetLastFrameDuration() {
+  return last_frame_duration_;
+}
+
+float Window::GetTimeSinceFrameStart() {
+  return glfwGetTime() - frame_start_;
 }
 
 CallbackCookie Window::AddFramebufferSizeCallback(

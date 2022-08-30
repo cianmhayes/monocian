@@ -24,6 +24,12 @@ using MouseScrollCallback =
 using KeyPressedCallback = std::function<void(Window* window, int32_t key)>;
 using KeyReleasedCallback = std::function<void(Window* window, int32_t key)>;
 
+enum class MouseCursorMode {
+    kNormal,
+    kHidden,
+    kDisabled,
+};
+
 class Window {
  public:
   Window(int width, int height, std::string title, bool resizable);
@@ -31,13 +37,18 @@ class Window {
   Window(const Window&) = delete;
   Window& operator=(const Window&) = delete;
 
-  operator bool() { return IsValid() && !ShouldClose(); }
-
   bool IsValid() const;
   bool ShouldClose() const;
   void SetShouldClose(bool should_close);
   void SwapBuffers();
   bool IsKeyPressed(int32_t key);
+  void SetMouseCursorMode(MouseCursorMode mode);
+
+  bool FrameStart();
+  void FrameEnd();
+
+  float GetLastFrameDuration();
+  float GetTimeSinceFrameStart();
 
   CallbackCookie AddFramebufferSizeCallback(FramebufferSizeCallback callback);
   void NotifyFrameBufferSizeCallbacks(int32_t width, int32_t height);
@@ -80,6 +91,9 @@ class Window {
   std::map<CallbackCookie, KeyPressedCallback> key_pressed_callbacks_;
   std::map<CallbackCookie, KeyReleasedCallback> key_released_callbacks_;
   GLFWwindow* glfw_window_;
+  float frame_start_;
+  float last_frame_duration_;
+  bool frame_started_ = false;
 };
 
 #endif  // SRC_OPEN_GL_WINDOW_H_

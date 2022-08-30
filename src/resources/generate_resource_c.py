@@ -12,7 +12,6 @@ file_template = """
 def generate_resource_c(source_path, target_path):
     sym = os.path.split(source_path)[1].replace(".", "_").replace("-", "_")
     os.makedirs(os.path.dirname(target_path), exist_ok=True)
-    #target_path = os.path.join(target_path, sym + ".c")
     with open(source_path, "rb") as source_file:
         raw_body = source_file.read().hex(" ")
         body = ", ".join(["0x" + b for b in raw_body.split(" ")])
