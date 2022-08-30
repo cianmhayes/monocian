@@ -69,7 +69,12 @@ void Shader::set_vec4f(const char* name, float v0, float v1, float v2, float v3)
     glUniform4f(location, v0, v1, v2, v3);
 }
 
-void Shader::set_int32(const char* name, uint32_t v0) {
+void Shader::set_int32(const char* name, int32_t v0) {
     uint32_t location = glGetUniformLocation(program_id_, name);
     glUniform1i(location, v0);
+}
+
+void Shader::set_float(const char* name, float v0) {
+    uint32_t location = glGetUniformLocation(program_id_, name);
+    glUniform1f(location, v0);
 }

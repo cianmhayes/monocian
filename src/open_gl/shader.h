@@ -22,7 +22,8 @@ class Shader {
   void set_mat4f(const char* name, const glm::mat4& matrix);
   void set_vec3f(const char* name, float v0, float v1, float v2);
   void set_vec4f(const char* name, float v0, float v1, float v2, float v3);
-  void set_int32(const char* name, uint32_t v0);
+  void set_int32(const char* name, int32_t v0);
+  void set_float(const char* name, float v0);
 
  private:
   uint32_t program_id_;

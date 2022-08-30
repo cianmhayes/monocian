@@ -8,10 +8,16 @@ embed_resources(
     shaders/light_source_frag.glsl
     shaders/lit_object_frag.glsl)
 
+embed_resources(
+    textures
+    assets/container2.png
+    assets/container2_specular.png)
+
 add_executable(
     lighting
     main.cc
-    ${shader_glsl})
+    ${shader_glsl}
+    ${textures})
 
 target_link_libraries(
     lighting
