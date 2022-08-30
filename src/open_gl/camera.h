@@ -11,9 +11,9 @@ class Camera {
   Camera(const Camera&) = delete;
   Camera& operator=(const Camera&) = delete;
 
-  void ProcessInput(GLFWwindow* window, float delta_time);
+  void ProcessDirectionKeys(bool forward, bool back, bool left, bool right, float camera_speed);
 
-  void ProcessMouseInput(GLFWwindow* window, double xpos, double ypos);
+  void ProcessMouseInput(double xpos, double ypos);
 
   glm::mat4 GetViewMatrix();
 

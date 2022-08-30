@@ -1,6 +1,18 @@
 cmake_minimum_required(VERSION 3.0...3.20 FATAL_ERROR)
 
-add_executable(lighting main.cc)
+include(../../src/resources/CMakeLists.txt)
+
+embed_resources(
+    shader_glsl
+    shaders/common_vertex.glsl
+    shaders/light_source_frag.glsl
+    shaders/lit_object_frag.glsl)
+
+add_executable(
+    lighting
+    main.cc
+    ${shader_glsl})
+
 target_link_libraries(
     lighting
     glad
@@ -8,6 +20,7 @@ target_link_libraries(
     open_gl
     opengl32
     stb_impl)
+    
 target_include_directories(
     lighting PUBLIC
     ../../src

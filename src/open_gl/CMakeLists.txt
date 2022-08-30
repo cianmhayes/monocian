@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.0...3.20 FATAL_ERROR)
 add_library(
     open_gl
     camera.cc
-    glfw_callback_manager.cc
-    shader.cc)
+    shader.cc
+    window.cc)
 
 target_include_directories(
     open_gl PUBLIC

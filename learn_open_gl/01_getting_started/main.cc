@@ -43,7 +43,7 @@ const char* kFragmentShaderSource =
 std::unique_ptr<Camera> g_cam;
 void process_mouse_movement_callback(GLFWwindow* window, double x_pos, double y_pos) {
   if (g_cam) {
-    g_cam->ProcessMouseInput(window, x_pos, y_pos);
+    g_cam->ProcessMouseInput(x_pos, y_pos);
   }
 }
 
@@ -197,10 +197,19 @@ int main() {
   float delta_time = 0.0f;
   float last_frame = glfwGetTime();
   while (!glfwWindowShouldClose(window)) {
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+      glfwSetWindowShouldClose(window, true);
+    }
     float current_frame = glfwGetTime();
     delta_time = current_frame - last_frame;
     last_frame = current_frame;
-    g_cam->ProcessInput(window, delta_time);
+    float camera_speed = 2.0f * delta_time;
+    g_cam->ProcessDirectionKeys(
+      (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS),
+      (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS),
+      (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS),
+      (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS),
+       camera_speed);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

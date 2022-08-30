@@ -18,7 +18,7 @@
 #include <map>
 #include <functional>
 
-#include "stb_easy_font.h"
+#include "../stb/stb_easy_font.h"
 #include "example-utils.hpp"
 
 #ifndef PI
@@ -938,6 +938,7 @@ struct glfw_state {
     texture tex;
 };
 
+/*
 // Handles all the OpenGL calls needed to display the point cloud
 void draw_pointcloud(float width, float height, glfw_state& app_state, rs2::points& points)
 {
@@ -975,7 +976,7 @@ void draw_pointcloud(float width, float height, glfw_state& app_state, rs2::poin
     glBegin(GL_POINTS);
 
 
-    /* this segment actually prints the pointcloud */
+    // this segment actually prints the pointcloud
     auto vertices = points.get_vertices();              // get vertices
     auto tex_coords = points.get_texture_coordinates(); // and texture coordinates
     for (int i = 0; i < points.size(); i++)
@@ -994,7 +995,7 @@ void draw_pointcloud(float width, float height, glfw_state& app_state, rs2::poin
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
     glPopAttrib();
-}
+}*/
 
 void quat2mat(rs2_quaternion& q, GLfloat H[16])  // to column-major matrix
 {
@@ -1004,6 +1005,7 @@ void quat2mat(rs2_quaternion& q, GLfloat H[16])  // to column-major matrix
     H[3] = 0.0f;                      H[7] = 0.0f;                      H[11] = 0.0f;                      H[15] = 1.0f;
 }
 
+/*
 // Handles all the OpenGL calls needed to display the point cloud w.r.t. static reference frame
 void draw_pointcloud_wrt_world(float width, float height, glfw_state& app_state, rs2::points& points, rs2_pose& pose, float H_t265_d400[16], std::vector<rs2_vector>& trajectory)
 {
@@ -1068,7 +1070,7 @@ void draw_pointcloud_wrt_world(float width, float height, glfw_state& app_state,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, 0x812F); // GL_CLAMP_TO_EDGE
     glBegin(GL_POINTS);
 
-    /* this segment actually prints the pointcloud */
+    // this segment actually prints the pointcloud
     auto vertices = points.get_vertices();              // get vertices
     auto tex_coords = points.get_texture_coordinates(); // and texture coordinates
     for (int i = 0; i < points.size(); i++)
@@ -1087,7 +1089,7 @@ void draw_pointcloud_wrt_world(float width, float height, glfw_state& app_state,
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
     glPopAttrib();
-}
+}*/
 
 // Registers the state variable and callbacks to allow mouse control of the pointcloud
 void register_glfw_callbacks(window& app, glfw_state& app_state)

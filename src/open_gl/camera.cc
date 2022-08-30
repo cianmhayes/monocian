@@ -6,27 +6,22 @@ Camera::Camera(glm::vec3&& pos, glm::vec3&& front, glm::vec3&& up)
     : pos_(pos), front_(front), up_(up){};
 Camera::~Camera() = default;
 
-void Camera::ProcessInput(GLFWwindow* window, float delta_time) {
-  float camera_speed = 2.0f * delta_time;
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-    glfwSetWindowShouldClose(window, true);
-  }
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+void Camera::ProcessDirectionKeys(bool forward, bool back, bool left, bool right, float camera_speed) {
+  if (forward && !back) {
     pos_ += camera_speed * front_;
-  }
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+  } 
+  if (back && !forward) {
     pos_ -= camera_speed * front_;
   }
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+  if (left && !right) {
     pos_ -= glm::normalize(glm::cross(front_, up_)) * camera_speed;
-  }
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+  } 
+  if (right && !left) {
     pos_ += glm::normalize(glm::cross(front_, up_)) * camera_speed;
   }
 }
 
-void Camera::ProcessMouseInput(GLFWwindow* /*window*/,
-                               double xpos,
+void Camera::ProcessMouseInput(double xpos,
                                double ypos) {
   if (first_mouse_) {
     last_mouse_x_ = xpos;
