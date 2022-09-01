@@ -1,12 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
 
-
-find_package(azure-storage-blobs-cpp CONFIG REQUIRED)
-find_package(FFMPEG COMPONENTS AVCODEC AVFORMAT AVUTIL AVDEVICE REQUIRED)
-find_package(glog CONFIG REQUIRED)
-find_package(jsoncpp CONFIG REQUIRED)
-find_package(realsense2 CONFIG REQUIRED)
-
 add_executable(realsense_capture
                main.cc
                file_writer.cc
