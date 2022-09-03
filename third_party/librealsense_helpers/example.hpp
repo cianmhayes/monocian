@@ -19,7 +19,6 @@
 #include <functional>
 
 #include "../stb/stb_easy_font.h"
-#include "example-utils.hpp"
 
 #ifndef PI
 #define PI  3.14159265358979323846
@@ -471,10 +470,19 @@ public:
         glColor4f(1.0f, 1.0f, 1.0f, alpha);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_QUADS);
-        glTexCoord2f(0, 0); glVertex2f(0, 0);
-        glTexCoord2f(0, 1); glVertex2f(0, r.h);
-        glTexCoord2f(1, 1); glVertex2f(r.w, r.h);
-        glTexCoord2f(1, 0); glVertex2f(r.w, 0);
+
+        glTexCoord2f(0, 0);
+        glVertex2f(0, 0);
+
+        glTexCoord2f(0, 1);
+        glVertex2f(0, r.h);
+
+        glTexCoord2f(1, 1);
+        glVertex2f(r.w, r.h);
+
+        glTexCoord2f(1, 0);
+        glVertex2f(r.w, 0);
+        
         glEnd();
         glDisable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);

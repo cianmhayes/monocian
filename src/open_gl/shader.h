@@ -7,9 +7,9 @@
 #include <glm/glm.hpp>
 
 class Shader {
-
  public:
-  Shader(std::string&& vertex_shader_source, std::string&& fragment_shader_source);
+  Shader(std::string&& vertex_shader_source,
+         std::string&& fragment_shader_source);
   ~Shader();
   Shader(const Shader&) = delete;
   Shader& operator=(const Shader&) = delete;
@@ -31,5 +31,4 @@ class Shader {
   std::string error_;
 };
 
-
-#endif SRC_OPEN_GL_SHADER_H_
+#endif  // SRC_OPEN_GL_SHADER_H_

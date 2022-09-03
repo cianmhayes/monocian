@@ -10,11 +10,13 @@ add_executable(realsense_capture
 
 target_include_directories(
     realsense_capture PUBLIC
+    ../../src
     ../../third_party)
 
 target_link_libraries(realsense_capture
                       glfw
                       opengl32
+                      open_gl
                       ${FFMPEG_LIBRARIES}
                       Azure::azure-storage-blobs
                       realsense2::realsense2

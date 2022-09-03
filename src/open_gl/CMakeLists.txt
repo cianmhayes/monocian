@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0...3.20 FATAL_ERROR)
 add_library(
     open_gl
     camera.cc
+    full_screen_video.cc
     shader.cc
     window.cc)
 

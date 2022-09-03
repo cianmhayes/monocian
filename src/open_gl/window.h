@@ -32,7 +32,7 @@ enum class MouseCursorMode {
 
 class Window {
  public:
-  Window(int width, int height, std::string title, bool resizable);
+  Window(int32_t width, int32_t height, std::string title, bool resizable);
   ~Window();
   Window(const Window&) = delete;
   Window& operator=(const Window&) = delete;
@@ -49,6 +49,9 @@ class Window {
 
   float GetLastFrameDuration();
   float GetTimeSinceFrameStart();
+
+  int32_t Width() const { return width_; };
+  int32_t Height() const { return height_; };
 
   CallbackCookie AddFramebufferSizeCallback(FramebufferSizeCallback callback);
   void NotifyFrameBufferSizeCallbacks(int32_t width, int32_t height);
@@ -94,6 +97,8 @@ class Window {
   float frame_start_;
   float last_frame_duration_;
   bool frame_started_ = false;
+  int32_t width_;
+  int32_t height_;
 };
 
 #endif  // SRC_OPEN_GL_WINDOW_H_

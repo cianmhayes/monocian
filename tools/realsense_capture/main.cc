@@ -7,13 +7,31 @@
 #include <iostream>
 #include <librealsense2/rs.hpp>
 #include <tuple>
-#include "librealsense_helpers/example.hpp"
+
+#include "open_gl/full_screen_video.h"
+#include "open_gl/window.h"
 
 #include "broadcast_writer.h"
 #include "buffered_blob_writer.h"
 #include "file_writer.h"
 #include "video_encoder.h"
 #include "video_encoding_queue.h"
+
+
+template <>
+const void* GetFrameData<rs2::video_frame>(const rs2::video_frame& frame) {
+  return frame.get_data();
+}
+
+template <>
+int GetFrameWidth<rs2::video_frame>(const rs2::video_frame& frame) {
+  return frame.get_width();
+}
+
+template <>
+int GetFrameHeight<rs2::video_frame>(const rs2::video_frame& frame) {
+  return frame.get_height();
+}
 
 std::string get_date_string() {
   std::time_t now =
@@ -89,7 +107,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  window app(1280, 720, "Ferry");
+  Window app(1280, 720, "Ferry", true);
 
   rs2::pipeline pipe;
   rs2::config config;
@@ -140,9 +158,10 @@ int main(int argc, char* argv[]) {
 
   depth_queue.Start();
   color_queue.Start();
-  while (app) {
+  FullScreenVideo video(&app);
+  while (app.FrameStart()) {
     rs2::frameset frames = pipe.wait_for_frames();
-    app.show(frames);
+    video.RenderFrame(frames.get_color_frame(), FrameFormat::RGB_8);
 
     rs2::depth_frame df = frames.get_depth_frame();
     if (df.get_data_size() > 0) {

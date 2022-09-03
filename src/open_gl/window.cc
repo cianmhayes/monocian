@@ -2,12 +2,12 @@
 
 #include <GLFW/glfw3.h>
 
-Window::Window(int width, int height, std::string title, bool resizable) {
+Window::Window(int32_t width, int32_t height, std::string title, bool resizable) : width_(width), height_(height) {
   glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
   glfw_window_ =
       glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -99,6 +99,9 @@ bool Window::FrameStart() {
   if (frame_started_) {
     FrameEnd();
   }
+  glfwGetWindowSize(glfw_window_, &width_, &height_);
+  glClear(GL_COLOR_BUFFER_BIT);
+
   float last_frame_start = frame_start_;
   frame_start_ = glfwGetTime();
   last_frame_duration_ = frame_start_ - last_frame_start;
