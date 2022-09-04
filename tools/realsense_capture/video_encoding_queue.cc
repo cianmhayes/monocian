@@ -26,18 +26,21 @@ void VideoEncodingQueue::Stop() {
 void VideoEncodingQueue::AddFrame(std::vector<uint8_t> frame) {
   {
     std::unique_lock<decltype(m_)> lock(m_);
-    q_.push(std::move(frame));
+    q_.push_back(std::move(frame));
   }
   cv_.notify_one();
 }
 
 void VideoEncodingQueue::ProcessingThread() {
   while (running_) {
-    std::unique_lock<decltype(m_)> lock(m_);
-    cv_.wait(lock, [this] { return !q_.empty() || !running_; });
-    if (!q_.empty()) {
-      encoder_->AddFrame(q_.front());
-      q_.pop();
+    std::list<std::vector<uint8_t>> popped;
+    {
+      std::unique_lock<decltype(m_)> lock(m_);
+      cv_.wait(lock, [this] { return !q_.empty() || !running_; });
+      if (!q_.empty()) {
+        popped.splice(popped.begin(), q_, q_.begin());
+      }
     }
+    encoder_->AddFrame(popped.front());
   }
 }

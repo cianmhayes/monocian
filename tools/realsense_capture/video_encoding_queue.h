@@ -3,7 +3,7 @@
 
 #include <condition_variable>
 #include <mutex>
-#include <queue>
+#include <list>
 #include <thread>
 #include <vector>
 
@@ -27,7 +27,7 @@ class VideoEncodingQueue {
 
   VideoEncoder* encoder_;
   bool running_;
-  std::queue<std::vector<uint8_t>> q_;
+  std::list<std::vector<uint8_t>> q_;
   mutable std::mutex m_;
   std::condition_variable cv_;
   std::thread processing_thread_;
