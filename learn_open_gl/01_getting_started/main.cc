@@ -11,8 +11,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <open_gl/camera.h>
-#include <open_gl/shader.h>
+#include <ogl/camera.h>
+#include <ogl/shader.h>
 
 const char* kVertexShaderSource =
     "#version 330 core\n"
@@ -40,8 +40,10 @@ const char* kFragmentShaderSource =
     "texture_coord), 0.2);\n"
     "}\0";
 
-std::unique_ptr<Camera> g_cam;
-void process_mouse_movement_callback(GLFWwindow* window, double x_pos, double y_pos) {
+std::unique_ptr<ogl::Camera> g_cam;
+void process_mouse_movement_callback(GLFWwindow* window,
+                                     double x_pos,
+                                     double y_pos) {
   if (g_cam) {
     g_cam->ProcessMouseInput(x_pos, y_pos);
   }
@@ -105,10 +107,10 @@ int main() {
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   uint32_t shader_program;
-  auto s = std::make_unique<Shader>(std::string(kVertexShaderSource),
-                                    std::string(kFragmentShaderSource));
-  if (!s->is_valid()) {
-    std::cout << "Failed to compile shader program: " << s->error();
+  auto s = std::make_unique<ogl::Shader>(std::string(kVertexShaderSource),
+                                         std::string(kFragmentShaderSource));
+  if (!s->IsValid()) {
+    std::cout << "Failed to compile shader program: " << s->GetInitializationError();
     glfwTerminate();
     return -1;
   }
@@ -174,14 +176,14 @@ int main() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 
-  s->use();
-  s->set_int32("texture_1", 0);
-  s->set_int32("texture_2", 1);
+  s->Use();
+  s->SetInt32("texture_1", 0);
+  s->SetInt32("texture_2", 1);
 
   glm::mat4 projection;
   projection =
       glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-  s->set_mat4f("projection", projection);
+  s->SetMat4f("projection", projection);
 
   glm::vec3 cubePositions[] = {
       glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
@@ -190,8 +192,9 @@ int main() {
       glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
       glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
-  
-  g_cam = std::make_unique<Camera>(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+  g_cam = std::make_unique<ogl::Camera>(glm::vec3(0.0f, 0.0f, 3.0f),
+                                        glm::vec3(0.0f, 0.0f, -1.0f),
+                                        glm::vec3(0.0f, 1.0f, 0.0f));
   glfwSetCursorPosCallback(window, process_mouse_movement_callback);
 
   float delta_time = 0.0f;
@@ -204,12 +207,11 @@ int main() {
     delta_time = current_frame - last_frame;
     last_frame = current_frame;
     float camera_speed = 2.0f * delta_time;
-    g_cam->ProcessDirectionKeys(
-      (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS),
-      (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS),
-      (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS),
-      (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS),
-       camera_speed);
+    g_cam->ProcessDirectionKeys((glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS),
+                                (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS),
+                                (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS),
+                                (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS),
+                                camera_speed);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -219,8 +221,8 @@ int main() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture_2);
 
-    s->use();
-    s->set_mat4f("view", g_cam->GetViewMatrix());
+    s->Use();
+    s->SetMat4f("view", g_cam->GetViewMatrix());
 
     glBindVertexArray(vao);
     for (const auto& position : cubePositions) {
@@ -228,7 +230,7 @@ int main() {
       model = glm::translate(model, position);
       model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f),
                           glm::vec3(0.5f, 1.0f, 0.0f));
-      s->set_mat4f("model", model);
+      s->SetMat4f("model", model);
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 

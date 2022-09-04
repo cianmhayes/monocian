@@ -1,7 +1,9 @@
-#ifndef SRC_OPEN_GL_FULL_SCREEN_VIDEO_H_
-#define SRC_OPEN_GL_FULL_SCREEN_VIDEO_H_
+#ifndef CXX_OGL_FULL_SCREEN_VIDEO_H_
+#define CXX_OGL_FULL_SCREEN_VIDEO_H_
 
 #include "Window.h"
+
+namespace ogl {
 
 enum class FrameFormat { RGB_8, RGBA_8, Y_8, Y_10BPACK };
 
@@ -37,7 +39,8 @@ class FullScreenVideo {
     int32_t frame_width = GetFrameWidth(frame);
     int32_t frame_height = GetFrameHeight(frame);
     SetFrameContent(frame_width, frame_height, GetFrameData(frame), format);
-    ShowFrame(AdjustBounds({0.0f, 0.0f, static_cast<float>(window_->Width()), static_cast<float>(window_->Height())},
+    ShowFrame(AdjustBounds({0.0f, 0.0f, static_cast<float>(window_->GetWidth()),
+                            static_cast<float>(window_->GetHeight())},
                            frame_width, frame_height),
               alpha);
   };
@@ -53,4 +56,6 @@ class FullScreenVideo {
   uint32_t texture_handle_;
 };
 
-#endif  // SRC_OPEN_GL_FULL_SCREEN_VIDEO_H_
+}  // namespace ogl
+
+#endif  // CXX_OGL_FULL_SCREEN_VIDEO_H_

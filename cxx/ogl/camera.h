@@ -1,8 +1,10 @@
-#ifndef SRC_OPEN_GL_CAMERA_H_
-#define SRC_OPEN_GL_CAMERA_H_
+#ifndef CXX_OGL_CAMERA_H_
+#define CXX_OGL_CAMERA_H_
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+
+namespace ogl {
 
 class Camera {
  public:
@@ -38,4 +40,6 @@ class Camera {
   bool first_mouse_ = true;
 };
 
-#endif  // SRC_OPEN_GL_CAMERA_H_
+}  // namespace ogl
+
+#endif  // CXX_OGL_CAMERA_H_

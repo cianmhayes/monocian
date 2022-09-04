@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0...3.20 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
 enable_testing()
 
@@ -9,11 +9,15 @@ add_executable(
   selective_search/selective_search_test.cc
 )
 
+target_include_directories(
+  unit_tests PUBLIC
+    ../cxx)
+
 target_link_libraries(
   unit_tests
   GTest::gtest_main
-  base
-  selective_search
+  mc_base
+  mc_selective_search
 )
 
 include(GoogleTest)

@@ -1,37 +1,38 @@
-#ifndef SRC_OPEN_GL_WINDOW_H_
-#define SRC_OPEN_GL_WINDOW_H_
+#ifndef CXX_OGL_WINDOW_H_
+#define CXX_OGL_WINDOW_H_
 
 #include <functional>
 #include <map>
 
-class Window;
 struct GLFWwindow;
 
-using CallbackCookie = size_t;
-
-using FramebufferSizeCallback =
-    std::function<void(Window* window, int32_t width, int32_t height)>;
-using MouseMovementCallback =
-    std::function<void(Window* window, double x_position, double y_position)>;
-
-using MouseButtonPressedCallback =
-    std::function<void(Window* window, int32_t button)>;
-using MouseButtonReleasedCallback =
-    std::function<void(Window* window, int32_t button)>;
-using MouseScrollCallback =
-    std::function<void(Window* window, double x_offset, double y_offset)>;
-
-using KeyPressedCallback = std::function<void(Window* window, int32_t key)>;
-using KeyReleasedCallback = std::function<void(Window* window, int32_t key)>;
+namespace ogl {
 
 enum class MouseCursorMode {
-    kNormal,
-    kHidden,
-    kDisabled,
+  kNormal,
+  kHidden,
+  kDisabled,
 };
 
 class Window {
  public:
+  using CallbackCookie = size_t;
+
+  using FramebufferSizeCallback =
+      std::function<void(Window* window, int32_t width, int32_t height)>;
+  using MouseMovementCallback =
+      std::function<void(Window* window, double x_position, double y_position)>;
+
+  using MouseButtonPressedCallback =
+      std::function<void(Window* window, int32_t button)>;
+  using MouseButtonReleasedCallback =
+      std::function<void(Window* window, int32_t button)>;
+  using MouseScrollCallback =
+      std::function<void(Window* window, double x_offset, double y_offset)>;
+
+  using KeyPressedCallback = std::function<void(Window* window, int32_t key)>;
+  using KeyReleasedCallback = std::function<void(Window* window, int32_t key)>;
+
   Window(int32_t width, int32_t height, std::string title, bool resizable);
   ~Window();
   Window(const Window&) = delete;
@@ -50,8 +51,8 @@ class Window {
   float GetLastFrameDuration();
   float GetTimeSinceFrameStart();
 
-  int32_t Width() const { return width_; };
-  int32_t Height() const { return height_; };
+  int32_t GetWidth() const { return width_; };
+  int32_t GetHeight() const { return height_; };
 
   CallbackCookie AddFramebufferSizeCallback(FramebufferSizeCallback callback);
   void NotifyFrameBufferSizeCallbacks(int32_t width, int32_t height);
@@ -101,4 +102,6 @@ class Window {
   int32_t height_;
 };
 
-#endif  // SRC_OPEN_GL_WINDOW_H_
+}  // namespace ogl
+
+#endif  // CXX_OGL_WINDOW_H_

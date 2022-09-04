@@ -2,12 +2,15 @@
 
 #include <GLFW/glfw3.h>
 
-Window::Window(int32_t width, int32_t height, std::string title, bool resizable) : width_(width), height_(height) {
+namespace ogl {
+
+Window::Window(int32_t width, int32_t height, std::string title, bool resizable)
+    : width_(width), height_(height) {
   glfwInit();
-  //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
   glfw_window_ =
       glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -123,14 +126,14 @@ float Window::GetTimeSinceFrameStart() {
   return glfwGetTime() - frame_start_;
 }
 
-CallbackCookie Window::AddFramebufferSizeCallback(
-    FramebufferSizeCallback callback) {
-  CallbackCookie c = framebuffer_size_callbacks_.size();
+Window::CallbackCookie Window::AddFramebufferSizeCallback(
+    Window::FramebufferSizeCallback callback) {
+  Window::CallbackCookie c = framebuffer_size_callbacks_.size();
   framebuffer_size_callbacks_.emplace(c, std::move(callback));
   return c;
 }
 
-void Window::RemoveFramebufferSizeCallback(CallbackCookie cookie) {
+void Window::RemoveFramebufferSizeCallback(Window::CallbackCookie cookie) {
   framebuffer_size_callbacks_.erase(cookie);
 }
 
@@ -140,14 +143,14 @@ void Window::NotifyFrameBufferSizeCallbacks(int32_t width, int32_t height) {
   }
 }
 
-CallbackCookie Window::AddMouseMovementCallback(
-    MouseMovementCallback callback) {
-  CallbackCookie c = mouse_movement_callbacks_.size();
+Window::CallbackCookie Window::AddMouseMovementCallback(
+    Window::MouseMovementCallback callback) {
+  Window::CallbackCookie c = mouse_movement_callbacks_.size();
   mouse_movement_callbacks_.emplace(c, std::move(callback));
   return c;
 }
 
-void Window::RemoveMouseMovementCallback(CallbackCookie cookie) {
+void Window::RemoveMouseMovementCallback(Window::CallbackCookie cookie) {
   mouse_movement_callbacks_.erase(cookie);
 }
 
@@ -158,9 +161,9 @@ void Window::NotifyMouseMovementCallbacks(double x_position,
   }
 }
 
-CallbackCookie Window::AddMouseButtonPressedCallback(
-    MouseButtonPressedCallback callback) {
-  CallbackCookie c = key_pressed_callbacks_.size();
+Window::CallbackCookie Window::AddMouseButtonPressedCallback(
+    Window::MouseButtonPressedCallback callback) {
+  Window::CallbackCookie c = key_pressed_callbacks_.size();
   mouse_button_pressed_callbacks_.emplace(c, std::move(callback));
   return c;
 }
@@ -171,13 +174,13 @@ void Window::NotifyMouseButtonPressedCallbacks(int32_t key) {
   }
 }
 
-void Window::RemoveMouseButtonPressedCallback(CallbackCookie cookie) {
+void Window::RemoveMouseButtonPressedCallback(Window::CallbackCookie cookie) {
   mouse_button_pressed_callbacks_.erase(cookie);
 }
 
-CallbackCookie Window::AddMouseButtonReleasedCallback(
-    MouseButtonReleasedCallback callback) {
-  CallbackCookie c = mouse_button_released_callbacks_.size();
+Window::CallbackCookie Window::AddMouseButtonReleasedCallback(
+    Window::MouseButtonReleasedCallback callback) {
+  Window::CallbackCookie c = mouse_button_released_callbacks_.size();
   mouse_button_released_callbacks_.emplace(c, std::move(callback));
   return c;
 }
@@ -188,12 +191,13 @@ void Window::NotifyMouseButtonReleasedCallbacks(int32_t key) {
   }
 }
 
-void Window::RemoveMouseButtonReleasedCallback(CallbackCookie cookie) {
+void Window::RemoveMouseButtonReleasedCallback(Window::CallbackCookie cookie) {
   mouse_button_released_callbacks_.erase(cookie);
 }
 
-CallbackCookie Window::AddMouseScrollCallback(MouseScrollCallback callback) {
-  CallbackCookie c = mouse_scroll_callbacks_.size();
+Window::CallbackCookie Window::AddMouseScrollCallback(
+    Window::MouseScrollCallback callback) {
+  Window::CallbackCookie c = mouse_scroll_callbacks_.size();
   mouse_scroll_callbacks_.emplace(c, std::move(callback));
   return c;
 }
@@ -204,12 +208,13 @@ void Window::NotifyMouseScrollCallbacks(double x_offset, double y_offset) {
   }
 }
 
-void Window::RemoveMouseScrollCallback(CallbackCookie cookie) {
+void Window::RemoveMouseScrollCallback(Window::CallbackCookie cookie) {
   mouse_scroll_callbacks_.erase(cookie);
 }
 
-CallbackCookie Window::AddKeyPressedCallback(KeyPressedCallback callback) {
-  CallbackCookie c = key_pressed_callbacks_.size();
+Window::CallbackCookie Window::AddKeyPressedCallback(
+    Window::KeyPressedCallback callback) {
+  Window::CallbackCookie c = key_pressed_callbacks_.size();
   key_pressed_callbacks_.emplace(c, std::move(callback));
   return c;
 }
@@ -220,12 +225,13 @@ void Window::NotifyKeyPressedCallbacks(int32_t key) {
   }
 }
 
-void Window::RemoveKeyPressedCallback(CallbackCookie cookie) {
+void Window::RemoveKeyPressedCallback(Window::CallbackCookie cookie) {
   key_pressed_callbacks_.erase(cookie);
 }
 
-CallbackCookie Window::AddKeyReleasedCallback(KeyReleasedCallback callback) {
-  CallbackCookie c = key_released_callbacks_.size();
+Window::CallbackCookie Window::AddKeyReleasedCallback(
+    Window::KeyReleasedCallback callback) {
+  Window::CallbackCookie c = key_released_callbacks_.size();
   key_released_callbacks_.emplace(c, std::move(callback));
   return c;
 }
@@ -236,6 +242,8 @@ void Window::NotifyKeyReleasedCallbacks(int32_t key) {
   }
 }
 
-void Window::RemoveKeyReleasedCallback(CallbackCookie cookie) {
+void Window::RemoveKeyReleasedCallback(Window::CallbackCookie cookie) {
   key_released_callbacks_.erase(cookie);
 }
+
+}  // namespace ogl

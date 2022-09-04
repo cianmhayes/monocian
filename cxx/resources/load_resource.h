@@ -1,5 +1,5 @@
-#ifndef SRC_REASOURCES_LOAD_RESOURCE_H_
-#define SRC_REASOURCES_LOAD_RESOURCE_H_
+#ifndef CXX_REASOURCES_LOAD_RESOURCE_H_
+#define CXX_REASOURCES_LOAD_RESOURCE_H_
 
 #include <string>
 
@@ -40,4 +40,4 @@ class Resource {
 #define LOAD_RESOURCE(RESOURCE) \
   Resource(_resource_##RESOURCE, _resource_##RESOURCE##_len);
 
-#endif  // SRC_REASOURCES_LOAD_RESOURCE_H_
+#endif  // CXX_REASOURCES_LOAD_RESOURCE_H_

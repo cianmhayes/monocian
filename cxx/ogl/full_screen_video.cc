@@ -2,6 +2,8 @@
 
 #include <GLFW/glfw3.h>
 
+namespace ogl {
+
 Rectangle AdjustBounds(const Rectangle original_bounds,
                        float target_width,
                        float target_height) {
@@ -97,3 +99,5 @@ void FullScreenVideo::ShowFrame(Rectangle region, float alpha) {
 
   glPopMatrix();
 }
+
+}  // namespace ogl

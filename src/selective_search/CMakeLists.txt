@@ -1,8 +1,0 @@
-cmake_minimum_required(VERSION 3.0...3.20 FATAL_ERROR)
-
-add_library(
-  selective_search
-  selective_search.cc
-)
-
-target_include_directories(selective_search PUBLIC ..)

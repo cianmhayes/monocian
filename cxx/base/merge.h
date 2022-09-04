@@ -1,5 +1,5 @@
-#ifndef SRC_BASE_MERGE_H_
-#define SRC_BASE_MERGE_H_
+#ifndef BASE_MERGE_H_
+#define BASE_MERGE_H_
 
 #include <functional>
 #include <list>
@@ -50,4 +50,4 @@ void TryMerge(std::list<TValue>& candidates,
 
 }  // namespace base
 
-#endif  // SRC_BASE_MERGE_H_
+#endif  // BASE_MERGE_H_

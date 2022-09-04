@@ -2,6 +2,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+namespace ogl {
+
 Camera::Camera(glm::vec3&& pos)
     : pos_(pos),
       front_(glm::vec3(0.0f, 0.0f, -1.0f)),
@@ -68,3 +70,5 @@ glm::mat4 Camera::GetProjectionMatrix() {
 glm::vec3 Camera::GetPosition() {
   return pos_;
 }
+
+}  // namespace ogl

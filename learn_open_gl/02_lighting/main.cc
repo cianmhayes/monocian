@@ -11,9 +11,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <open_gl/camera.h>
-#include <open_gl/shader.h>
-#include <open_gl/window.h>
+#include <ogl/camera.h>
+#include <ogl/shader.h>
+#include <ogl/window.h>
 #include <resources/load_resource.h>
 
 DECLARE_RESOURCE(common_vertex_glsl)
@@ -23,50 +23,43 @@ DECLARE_RESOURCE(container2_png)
 DECLARE_RESOURCE(container2_specular_png)
 
 uint32_t CreateCube() {
-    float vertices[] = {
-        // positions          // normals           // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+  float vertices[] = {
+      // positions          // normals           // texture coords
+      -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f,  0.0f,  0.5f,  -0.5f,
+      -0.5f, 0.0f,  0.0f,  -1.0f, 1.0f,  0.0f,  0.5f,  0.5f,  -0.5f, 0.0f,
+      0.0f,  -1.0f, 1.0f,  1.0f,  0.5f,  0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f,
+      1.0f,  1.0f,  -0.5f, 0.5f,  -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f,  1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f,  0.0f,  -1.0f, 0.0f,  0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+      -0.5f, -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  0.5f,  -0.5f,
+      0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,  0.5f,  0.5f,  0.5f,  0.0f,
+      0.0f,  1.0f,  1.0f,  1.0f,  0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+      1.0f,  1.0f,  -0.5f, 0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+      -0.5f, -0.5f, 0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+      -0.5f, 0.5f,  0.5f,  -1.0f, 0.0f,  0.0f,  1.0f,  0.0f,  -0.5f, 0.5f,
+      -0.5f, -1.0f, 0.0f,  0.0f,  1.0f,  1.0f,  -0.5f, -0.5f, -0.5f, -1.0f,
+      0.0f,  0.0f,  0.0f,  1.0f,  -0.5f, -0.5f, -0.5f, -1.0f, 0.0f,  0.0f,
+      0.0f,  1.0f,  -0.5f, -0.5f, 0.5f,  -1.0f, 0.0f,  0.0f,  0.0f,  0.0f,
+      -0.5f, 0.5f,  0.5f,  -1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.5f,  0.5f,
+      -0.5f, 1.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.5f,  -0.5f, -0.5f, 1.0f,
+      0.0f,  0.0f,  0.0f,  1.0f,  0.5f,  -0.5f, -0.5f, 1.0f,  0.0f,  0.0f,
+      0.0f,  1.0f,  0.5f,  -0.5f, 0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f,  0.0f,  1.0f,  0.5f,  -0.5f,
+      -0.5f, 0.0f,  -1.0f, 0.0f,  1.0f,  1.0f,  0.5f,  -0.5f, 0.5f,  0.0f,
+      -1.0f, 0.0f,  1.0f,  0.0f,  0.5f,  -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f,
+      1.0f,  0.0f,  -0.5f, -0.5f, 0.5f,  0.0f,  -1.0f, 0.0f,  0.0f,  0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f,  -1.0f, 0.0f,  0.0f,  1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
-    };
+      -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.5f,  0.5f,
+      -0.5f, 0.0f,  1.0f,  0.0f,  1.0f,  1.0f,  0.5f,  0.5f,  0.5f,  0.0f,
+      1.0f,  0.0f,  1.0f,  0.0f,  0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+      1.0f,  0.0f,  -0.5f, 0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+      -0.5f, 0.5f,  -0.5f, 0.0f,  1.0f,  0.0f,  0.0f,  1.0f};
 
   uint32_t vao;
   uint32_t vbo;
@@ -96,15 +89,21 @@ uint32_t CreateCube() {
   return vao;
 }
 
-bool LoadTextureAsset(const Resource& r, uint32_t format, bool flip, uint32_t* texture_id) {
+bool LoadTextureAsset(const Resource& r,
+                      uint32_t format,
+                      bool flip,
+                      uint32_t* texture_id) {
   int32_t width, height, channels;
   std::vector<uint8_t> proxy(r.begin(), r.end());
-  uint8_t* data = stbi_load_from_memory(proxy.data(), r.size(), &width, &height, &channels, 0);
-  //std::string texture_path = "C:\\code\\monocian\\learn_open_gl\\02_lighting\\assets\\container2.png";
-  //uint8_t* data = stbi_load(texture_path.c_str(), &width, &height, &channels, 0);
+  uint8_t* data = stbi_load_from_memory(proxy.data(), r.size(), &width, &height,
+                                        &channels, 0);
+  // std::string texture_path =
+  // "C:\\code\\monocian\\learn_open_gl\\02_lighting\\assets\\container2.png";
+  // uint8_t* data = stbi_load(texture_path.c_str(), &width, &height, &channels,
+  // 0);
   if (!data)
     return false;
-  
+
   glGenTextures(1, texture_id);
   glBindTexture(GL_TEXTURE_2D, *texture_id);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -119,7 +118,7 @@ bool LoadTextureAsset(const Resource& r, uint32_t format, bool flip, uint32_t* t
 }
 
 int main() {
-  Window window = Window(800, 600, "LearnOpenGL", true);
+  ogl::Window window = ogl::Window(800, 600, "LearnOpenGL", true);
 
   if (!window.IsValid()) {
     std::cout << "Failed to create window";
@@ -136,41 +135,41 @@ int main() {
   glViewport(0, 0, 800, 600);
   glEnable(GL_DEPTH_TEST);
   window.AddFramebufferSizeCallback(
-      [](Window* w, int32_t width, int32_t height) {
+      [](ogl::Window* w, int32_t width, int32_t height) {
         glViewport(0, 0, width, height);
       });
 
-  auto cam = std::make_unique<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
+  auto cam = std::make_unique<ogl::Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
 
-  window.SetMouseCursorMode(MouseCursorMode::kDisabled);
-  Camera* camera_ptr = cam.get();
+  window.SetMouseCursorMode(ogl::MouseCursorMode::kDisabled);
+  ogl::Camera* camera_ptr = cam.get();
   window.AddMouseMovementCallback(
-      [&camera_ptr](Window* w, double x_position, double y_position) {
+      [&camera_ptr](ogl::Window* w, double x_position, double y_position) {
         camera_ptr->ProcessMouseInput(x_position, y_position);
       });
 
   Resource vertex_shader = LOAD_RESOURCE(common_vertex_glsl);
   Resource light_source_fragment_shader = LOAD_RESOURCE(light_source_frag_glsl);
   Resource lit_object_fragment_shader = LOAD_RESOURCE(lit_object_frag_glsl);
-  auto lit_shader = std::make_unique<Shader>(
+  auto lit_shader = std::make_unique<ogl::Shader>(
       vertex_shader.ToString(), lit_object_fragment_shader.ToString());
-  if (!lit_shader->is_valid()) {
+  if (!lit_shader->IsValid()) {
     std::cout << "Failed to compile lit shader program: "
-              << lit_shader->error();
+              << lit_shader->GetInitializationError();
     glfwTerminate();
     return -1;
   }
-  lit_shader->use();
+  lit_shader->Use();
 
-  auto light_source_shader = std::make_unique<Shader>(
+  auto light_source_shader = std::make_unique<ogl::Shader>(
       vertex_shader.ToString(), light_source_fragment_shader.ToString());
-  if (!light_source_shader->is_valid()) {
+  if (!light_source_shader->IsValid()) {
     std::cout << "Failed to compile light source shader program: "
-              << light_source_shader->error();
+              << light_source_shader->GetInitializationError();
     glfwTerminate();
     return -1;
   }
-  light_source_shader->use();
+  light_source_shader->Use();
 
   Resource container_resource = LOAD_RESOURCE(container2_png);
   uint32_t diffuse_map;
@@ -199,19 +198,19 @@ int main() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    lit_shader->use();
-    lit_shader->set_vec3f("light.ambient", 0.2f, 0.2f, 0.2f);
-    lit_shader->set_vec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
-    lit_shader->set_vec3f("light.specular", 1.0f, 1.0f, 1.0f);
-    lit_shader->set_vec3f("light.position", light_pos.x, light_pos.y,
+    lit_shader->Use();
+    lit_shader->SetVec3f("light.ambient", 0.2f, 0.2f, 0.2f);
+    lit_shader->SetVec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
+    lit_shader->SetVec3f("light.specular", 1.0f, 1.0f, 1.0f);
+    lit_shader->SetVec3f("light.position", light_pos.x, light_pos.y,
                           light_pos.z);
     glm::vec3 camera_pos = cam->GetPosition();
-    lit_shader->set_vec3f("view_position", camera_pos.x, camera_pos.y,
+    lit_shader->SetVec3f("view_position", camera_pos.x, camera_pos.y,
                           camera_pos.z);
-    lit_shader->set_vec3f("material.ambient", 0.135f, 0.2225f, 0.1575f);
-    lit_shader->set_int32("material.diffuse", 0);
-    lit_shader->set_int32("material.specular", 1);
-    lit_shader->set_float("material.shininess", 128 * 0.1f);
+    lit_shader->SetVec3f("material.ambient", 0.135f, 0.2225f, 0.1575f);
+    lit_shader->SetInt32("material.diffuse", 0);
+    lit_shader->SetInt32("material.specular", 1);
+    lit_shader->SetFloat("material.shininess", 128 * 0.1f);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diffuse_map);
     glActiveTexture(GL_TEXTURE1);
@@ -220,16 +219,16 @@ int main() {
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f),
                         glm::vec3(0.5f, 1.0f, 0.0f));
-    lit_shader->set_mat4f("model", model);
-    lit_shader->set_mat4f("projection", cam->GetProjectionMatrix());
-    lit_shader->set_mat4f("view", cam->GetViewMatrix());
+    lit_shader->SetMat4f("model", model);
+    lit_shader->SetMat4f("projection", cam->GetProjectionMatrix());
+    lit_shader->SetMat4f("view", cam->GetViewMatrix());
     glBindVertexArray(cube);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
-    light_source_shader->use();
-    light_source_shader->set_mat4f("model", light_transform);
-    light_source_shader->set_mat4f("projection", cam->GetProjectionMatrix());
-    light_source_shader->set_mat4f("view", cam->GetViewMatrix());
+    light_source_shader->Use();
+    light_source_shader->SetMat4f("model", light_transform);
+    light_source_shader->SetMat4f("projection", cam->GetProjectionMatrix());
+    light_source_shader->SetMat4f("view", cam->GetViewMatrix());
     glBindVertexArray(light);
     glDrawArrays(GL_TRIANGLES, 0, 36);
   }

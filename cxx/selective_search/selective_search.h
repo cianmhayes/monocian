@@ -1,5 +1,5 @@
-#ifndef SRC_SELECTIVE_SEARCH_SELECTIVE_SEARCH_H_
-#define SRC_SELECTIVE_SEARCH_SELECTIVE_SEARCH_H_
+#ifndef CXX_SELECTIVE_SEARCH_SELECTIVE_SEARCH_H_
+#define CXX_SELECTIVE_SEARCH_SELECTIVE_SEARCH_H_
 
 #include <functional>
 #include <list>
@@ -24,4 +24,4 @@ std::list<Component> SelectiveSearch(
 
 }  // namespace selective_search
 
-#endif  // SRC_SELECTIVE_SEARCH_SELECTIVE_SEARCH_H_
+#endif  // CXX_SELECTIVE_SEARCH_SELECTIVE_SEARCH_H_

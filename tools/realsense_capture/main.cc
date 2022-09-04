@@ -8,8 +8,8 @@
 #include <librealsense2/rs.hpp>
 #include <tuple>
 
-#include "open_gl/full_screen_video.h"
-#include "open_gl/window.h"
+#include "ogl/full_screen_video.h"
+#include "ogl/window.h"
 
 #include "broadcast_writer.h"
 #include "buffered_blob_writer.h"
@@ -17,6 +17,7 @@
 #include "video_encoder.h"
 #include "video_encoding_queue.h"
 
+namespace ogl {
 
 template <>
 const void* GetFrameData<rs2::video_frame>(const rs2::video_frame& frame) {
@@ -32,6 +33,8 @@ template <>
 int GetFrameHeight<rs2::video_frame>(const rs2::video_frame& frame) {
   return frame.get_height();
 }
+
+}  // namespace ogl
 
 std::string get_date_string() {
   std::time_t now =
@@ -107,7 +110,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  Window app(1280, 720, "Ferry", true);
+  ogl::Window app(1280, 720, "Ferry", true);
 
   rs2::pipeline pipe;
   rs2::config config;
@@ -158,10 +161,10 @@ int main(int argc, char* argv[]) {
 
   depth_queue.Start();
   color_queue.Start();
-  FullScreenVideo video(&app);
+  ogl::FullScreenVideo video(&app);
   while (app.FrameStart()) {
     rs2::frameset frames = pipe.wait_for_frames();
-    video.RenderFrame(frames.get_color_frame(), FrameFormat::RGB_8);
+    video.RenderFrame(frames.get_color_frame(), ogl::FrameFormat::RGB_8);
 
     rs2::depth_frame df = frames.get_depth_frame();
     if (df.get_data_size() > 0) {

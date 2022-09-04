@@ -1,14 +1,14 @@
-cmake_minimum_required(VERSION 3.0...3.20 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
 add_library(
-    open_gl
+    mc_ogl
     camera.cc
     full_screen_video.cc
     shader.cc
     window.cc)
 
 target_include_directories(
-    open_gl PUBLIC
+    mc_ogl PUBLIC
     ../../third_party/glad/include
     ../../third_party/glfw/include
     ../../third_party/glm

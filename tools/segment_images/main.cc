@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "base/graph.h"
-#include "selective_Search/selective_search.h"
+#include "selective_search/selective_search.h"
 
 int main(int argc, char** argv) {
   int32_t width, height, channels;

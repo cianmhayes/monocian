@@ -2,6 +2,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+namespace ogl {
+
 Shader::Shader(std::string&& vertex_shader_source,
                std::string&& fragment_shader_source) {
   is_valid_ = false;
@@ -49,32 +51,38 @@ Shader::Shader(std::string&& vertex_shader_source,
 
 Shader::~Shader() = default;
 
-void Shader::use() {
+void Shader::Use() {
   if (is_valid_)
     glUseProgram(program_id_);
 }
 
-void Shader::set_mat4f(const char* name, const glm::mat4& matrix) {
+void Shader::SetMat4f(const char* name, const glm::mat4& matrix) {
   uint32_t location = glGetUniformLocation(program_id_, name);
   glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void Shader::set_vec3f(const char* name, float v0, float v1, float v2) {
-    uint32_t location = glGetUniformLocation(program_id_, name);
-    glUniform3f(location, v0, v1, v2);
+void Shader::SetVec3f(const char* name, float v0, float v1, float v2) {
+  uint32_t location = glGetUniformLocation(program_id_, name);
+  glUniform3f(location, v0, v1, v2);
 }
 
-void Shader::set_vec4f(const char* name, float v0, float v1, float v2, float v3) {
-    uint32_t location = glGetUniformLocation(program_id_, name);
-    glUniform4f(location, v0, v1, v2, v3);
+void Shader::SetVec4f(const char* name,
+                       float v0,
+                       float v1,
+                       float v2,
+                       float v3) {
+  uint32_t location = glGetUniformLocation(program_id_, name);
+  glUniform4f(location, v0, v1, v2, v3);
 }
 
-void Shader::set_int32(const char* name, int32_t v0) {
-    uint32_t location = glGetUniformLocation(program_id_, name);
-    glUniform1i(location, v0);
+void Shader::SetInt32(const char* name, int32_t v0) {
+  uint32_t location = glGetUniformLocation(program_id_, name);
+  glUniform1i(location, v0);
 }
 
-void Shader::set_float(const char* name, float v0) {
-    uint32_t location = glGetUniformLocation(program_id_, name);
-    glUniform1f(location, v0);
+void Shader::SetFloat(const char* name, float v0) {
+  uint32_t location = glGetUniformLocation(program_id_, name);
+  glUniform1f(location, v0);
 }
+
+}  // namespace ogl
