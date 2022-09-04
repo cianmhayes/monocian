@@ -1,7 +1,8 @@
 #include "broadcast_writer.h"
 
-BroadcastWriter::BroadcastWriter(std::vector<Writer*> internal_writers)
-    : internal_writers_(internal_writers) {}
+BroadcastWriter::BroadcastWriter(
+    std::vector<std::unique_ptr<Writer>> internal_writers)
+    : internal_writers_(std::move(internal_writers)) {}
 
 BroadcastWriter::~BroadcastWriter() {}
 

@@ -1,12 +1,13 @@
 #ifndef TOOLS_FERRY_BROADCAST_WRITER_H
 #define TOOLS_FERRY_BROADCAST_WRITER_H
 
+#include <memory>
 #include <vector>
 #include "writer.h"
 
 class BroadcastWriter : public Writer {
  public:
-  BroadcastWriter(std::vector<Writer*> internal_writers);
+  BroadcastWriter(std::vector<std::unique_ptr<Writer>> internal_writers);
   ~BroadcastWriter();
   BroadcastWriter(const BroadcastWriter&) = delete;
   BroadcastWriter& operator=(const BroadcastWriter&) = delete;
@@ -16,7 +17,7 @@ class BroadcastWriter : public Writer {
   virtual void Close() override;
 
  private:
-  std::vector<Writer*> internal_writers_;
+  std::vector<std::unique_ptr<Writer>> internal_writers_;
 };
 
 #endif  // TOOLS_FERRY_BROADCAST_WRITER_H

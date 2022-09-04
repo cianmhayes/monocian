@@ -120,33 +120,25 @@ int main(int argc, char* argv[]) {
   pipe.start(config);
 
   std::string timestamp = get_date_string();
-  std::vector<Writer*> depth_writers = {};
-  std::vector<Writer*> color_writers = {};
-  std::unique_ptr<FileWriter> depth_file_writer;
-  std::unique_ptr<FileWriter> color_file_writer;
+  std::vector<std::unique_ptr<Writer>> depth_writers = {};
+  std::vector<std::unique_ptr<Writer>> color_writers = {};
   if (settings.write_to_file) {
-    depth_file_writer =
-        std::make_unique<FileWriter>(("depth_" + timestamp + ".asf").c_str());
-    color_file_writer =
-        std::make_unique<FileWriter>(("color_" + timestamp + ".asf").c_str());
-    depth_writers.push_back(depth_file_writer.get());
-    color_writers.push_back(color_file_writer.get());
+    depth_writers.push_back(
+        std::make_unique<FileWriter>(("depth_" + timestamp + ".asf").c_str()));
+    color_writers.push_back(
+        std::make_unique<FileWriter>(("color_" + timestamp + ".asf").c_str()));
   }
-  std::unique_ptr<BufferedBlobWriter> depth_service_writer;
-  std::unique_ptr<BufferedBlobWriter> color_service_writer;
   if (settings.write_to_service) {
     std::string depth_blob_name =
         settings.blob_root + "/" + timestamp + "/depth.asf";
     std::string color_blob_name =
         settings.blob_root + "/" + timestamp + "/color.asf";
-    depth_service_writer = std::make_unique<BufferedBlobWriter>(
+    depth_writers.push_back(std::make_unique<BufferedBlobWriter>(
         settings.connection_string, settings.container_name, depth_blob_name,
-        2 * 1024 * 1024);
-    color_service_writer = std::make_unique<BufferedBlobWriter>(
+        2 * 1024 * 1024));
+    color_writers.push_back(std::make_unique<BufferedBlobWriter>(
         settings.connection_string, settings.container_name, color_blob_name,
-        2 * 1024 * 1024);
-    depth_writers.push_back(depth_service_writer.get());
-    color_writers.push_back(color_service_writer.get());
+        2 * 1024 * 1024));
   }
 
   BroadcastWriter depth_broadcast_writer(std::move(depth_writers));
