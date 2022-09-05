@@ -1,5 +1,5 @@
-#ifndef AV_VIDEO_ENCODER_H
-#define AV_VIDEO_ENCODER_H
+#ifndef CXX_AV_VIDEO_ENCODER_H
+#define CXX_AV_VIDEO_ENCODER_H
 
 #include <memory>
 #include <vector>
@@ -60,4 +60,4 @@ class VideoEncoder {
 
 }  // namespace av
 
-#endif  // AV_VIDEO_ENCODER_H
+#endif  // CXX_AV_VIDEO_ENCODER_H

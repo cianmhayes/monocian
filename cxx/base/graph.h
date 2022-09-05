@@ -1,5 +1,5 @@
-#ifndef BASE_GRAPH_H_
-#define BASE_GRAPH_H_
+#ifndef CXX_BASE_GRAPH_H_
+#define CXX_BASE_GRAPH_H_
 
 #include <functional>
 #include <memory>
@@ -69,4 +69,4 @@ class Graph {
 }  // namespace base
 
 
-#endif  // BASE_GRAPH_H_
+#endif  // CXX_BASE_GRAPH_H_

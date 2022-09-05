@@ -1,5 +1,5 @@
-#ifndef BASE_ASYNC_PROCESSING_QUEUE_H_
-#define BASE_ASYNC_PROCESSING_QUEUE_H_
+#ifndef CXX_BASE_ASYNC_PROCESSING_QUEUE_H_
+#define CXX_BASE_ASYNC_PROCESSING_QUEUE_H_
 
 #include <condition_variable>
 #include <functional>
@@ -89,4 +89,4 @@ class AsyncProcessingQueue : AsyncProcessingQueueBase<T> {
 
 }  // namespace base
 
-#endif  // BASE_ASYNC_PROCESSING_QUEUE_H_
+#endif  // CXX_BASE_ASYNC_PROCESSING_QUEUE_H_

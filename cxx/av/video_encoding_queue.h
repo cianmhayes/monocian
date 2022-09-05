@@ -1,5 +1,5 @@
-#ifndef AV_VIDEO_ENCODING_QUEUE_H
-#define AV_VIDEO_ENCODING_QUEUE_H
+#ifndef CXX_AV_VIDEO_ENCODING_QUEUE_H
+#define CXX_AV_VIDEO_ENCODING_QUEUE_H
 
 #include <memory>
 
@@ -34,4 +34,4 @@ class VideoEncodingQueue
 
 }  // namespace av
 
-#endif  // AV_VIDEO_ENCODING_QUEUE_H
+#endif  // CXX_AV_VIDEO_ENCODING_QUEUE_H

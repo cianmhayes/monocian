@@ -1,5 +1,5 @@
-#ifndef BASE_STORAGE_WRITER_H_
-#define BASE_STORAGE_WRITER_H_
+#ifndef CXX_BASE_STORAGE_WRITER_H_
+#define CXX_BASE_STORAGE_WRITER_H_
 
 namespace base {
 namespace storage {
@@ -14,4 +14,4 @@ class Writer {
 }  // namespace storage
 }  // namespace base
 
-#endif  // BASE_STORAGE_WRITER_H_
+#endif  // CXX_BASE_STORAGE_WRITER_H_

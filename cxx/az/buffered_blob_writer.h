@@ -1,5 +1,5 @@
-#ifndef AZ_BUFFERED_BLOB_WRITER_H_
-#define AZ_BUFFERED_BLOB_WRITER_H_
+#ifndef CXX_AZ_BUFFERED_BLOB_WRITER_H_
+#define CXX_AZ_BUFFERED_BLOB_WRITER_H_
 
 #include <string>
 #include <vector>
@@ -33,4 +33,4 @@ class BufferedBlobWriter : public base::storage::Writer {
 
 }  // namespace az
 
-#endif  // AZ_BUFFERED_BLOB_WRITER_H_
+#endif  // CXX_AZ_BUFFERED_BLOB_WRITER_H_

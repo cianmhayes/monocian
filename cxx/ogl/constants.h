@@ -1,5 +1,5 @@
-#ifndef OGL_CONSTANTS_H_
-#define OGL_CONSTANTS_H_
+#ifndef CXX_OGL_CONSTANTS_H_
+#define CXX_OGL_CONSTANTS_H_
 
 /* The unknown key */
 #define OGL_KEY_UNKNOWN            -1
