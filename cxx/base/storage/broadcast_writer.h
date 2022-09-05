@@ -1,9 +1,12 @@
-#ifndef STORAGE_BROADCAST_WRITER_H_
-#define STORAGE_BROADCAST_WRITER_H_
+#ifndef BASE_STORAGE_BROADCAST_WRITER_H_
+#define BASE_STORAGE_BROADCAST_WRITER_H_
 
 #include <memory>
 #include <vector>
 #include "writer.h"
+
+namespace base {
+namespace storage {
 
 class BroadcastWriter : public Writer {
  public:
@@ -20,4 +23,7 @@ class BroadcastWriter : public Writer {
   std::vector<std::unique_ptr<Writer>> internal_writers_;
 };
 
-#endif  // STORAGE_BROADCAST_WRITER_H_
+}  // namespace storage
+}  // namespace base
+
+#endif  // BASE_STORAGE_BROADCAST_WRITER_H_

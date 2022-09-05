@@ -8,15 +8,14 @@
 #include <librealsense2/rs.hpp>
 #include <tuple>
 
+#include "av/video_encoder.h"
+#include "av/video_encoding_queue.h"
+#include "az/buffered_blob_writer.h"
+#include "base/storage/broadcast_writer.h"
+#include "base/storage/file_writer.h"
+#include "ogl/constants.h"
 #include "ogl/full_screen_video.h"
 #include "ogl/window.h"
-#include "ogl/constants.h"
-#include "storage/broadcast_writer.h"
-#include "storage/buffered_blob_writer.h"
-#include "storage/file_writer.h"
-
-#include "video_encoder.h"
-#include "video_encoding_queue.h"
 
 namespace ogl {
 
@@ -121,36 +120,33 @@ int main(int argc, char* argv[]) {
   pipe.start(config);
 
   std::string timestamp = get_date_string();
-  std::vector<std::unique_ptr<Writer>> depth_writers = {};
-  std::vector<std::unique_ptr<Writer>> color_writers = {};
+  std::vector<std::unique_ptr<base::storage::Writer>> depth_writers = {};
+  std::vector<std::unique_ptr<base::storage::Writer>> color_writers = {};
   if (settings.write_to_file) {
     depth_writers.push_back(
-        std::make_unique<FileWriter>(("depth_" + timestamp + ".asf").c_str()));
+        std::make_unique<base::storage::FileWriter>(("depth_" + timestamp + ".asf").c_str()));
     color_writers.push_back(
-        std::make_unique<FileWriter>(("color_" + timestamp + ".asf").c_str()));
+        std::make_unique<base::storage::FileWriter>(("color_" + timestamp + ".asf").c_str()));
   }
   if (settings.write_to_service) {
     std::string depth_blob_name =
         settings.blob_root + "/" + timestamp + "/depth.asf";
     std::string color_blob_name =
         settings.blob_root + "/" + timestamp + "/color.asf";
-    depth_writers.push_back(std::make_unique<BufferedBlobWriter>(
+    depth_writers.push_back(std::make_unique<az::BufferedBlobWriter>(
         settings.connection_string, settings.container_name, depth_blob_name,
         2 * 1024 * 1024));
-    color_writers.push_back(std::make_unique<BufferedBlobWriter>(
+    color_writers.push_back(std::make_unique<az::BufferedBlobWriter>(
         settings.connection_string, settings.container_name, color_blob_name,
         2 * 1024 * 1024));
   }
 
-  BroadcastWriter depth_broadcast_writer(std::move(depth_writers));
-  VideoEncoder depth_encoder(dynamic_cast<Writer*>(&depth_broadcast_writer), 30,
-                             848, 480, settings.depth_bitrate_bps);
-  VideoEncodingQueue depth_queue(&depth_encoder);
-
-  BroadcastWriter color_broadcast_writer(std::move(color_writers));
-  VideoEncoder color_encoder(dynamic_cast<Writer*>(&color_broadcast_writer), 30,
-                             1280, 720, settings.color_bitrate_bps);
-  VideoEncodingQueue color_queue(&color_encoder);
+  av::VideoEncodingQueue depth_queue(
+      std::make_unique<base::storage::BroadcastWriter>(std::move(depth_writers)), 30, 848, 480,
+      settings.depth_bitrate_bps);
+  av::VideoEncodingQueue color_queue(
+      std::make_unique<base::storage::BroadcastWriter>(std::move(color_writers)), 30, 1280,
+      720, settings.color_bitrate_bps);
 
   depth_queue.Start();
   color_queue.Start();
@@ -158,16 +154,17 @@ int main(int argc, char* argv[]) {
   bool show_video = true;
   bool* show_video_ptr = &show_video;
 
-  app.AddKeyReleasedCallback([&show_video_ptr](ogl::Window* window, int32_t key) {
-    switch(key) {
-      case OGL_KEY_ESCAPE:
-        window->SetShouldClose(true);
-        break;
-      case OGL_KEY_D:
-        *show_video_ptr = !(*show_video_ptr);
-        break;
-    }
-  });
+  app.AddKeyReleasedCallback(
+      [&show_video_ptr](ogl::Window* window, int32_t key) {
+        switch (key) {
+          case OGL_KEY_ESCAPE:
+            window->SetShouldClose(true);
+            break;
+          case OGL_KEY_D:
+            *show_video_ptr = !(*show_video_ptr);
+            break;
+        }
+      });
 
   rs2::colorizer colourizer;
   ogl::FullScreenVideo video(&app);
@@ -179,7 +176,8 @@ int main(int argc, char* argv[]) {
     if (show_video) {
       video.RenderFrame(vf, ogl::FrameFormat::RGB_8);
     } else {
-      video.RenderFrame(df.apply_filter(colourizer).as<rs2::video_frame>(), ogl::FrameFormat::RGB_8);
+      video.RenderFrame(df.apply_filter(colourizer).as<rs2::video_frame>(),
+                        ogl::FrameFormat::RGB_8);
     }
 
     if (df.get_data_size() > 0) {

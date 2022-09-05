@@ -1,5 +1,8 @@
 #include "file_writer.h"
 
+namespace base {
+namespace storage {
+
 FileWriter::FileWriter(const char* filename) {
   output_file_.open(filename, std::ifstream::binary | std::ifstream::out);
 }
@@ -13,3 +16,6 @@ void FileWriter::Write(uint8_t* data, size_t size) {
 void FileWriter::Close() {
   output_file_.close();
 }
+
+}  // namespace storage
+}  // namespace base

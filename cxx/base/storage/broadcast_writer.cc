@@ -1,5 +1,8 @@
 #include "broadcast_writer.h"
 
+namespace base {
+namespace storage {
+
 BroadcastWriter::BroadcastWriter(
     std::vector<std::unique_ptr<Writer>> internal_writers)
     : internal_writers_(std::move(internal_writers)) {}
@@ -21,3 +24,6 @@ void BroadcastWriter::Close() {
     }
   }
 }
+
+}  // namespace storage
+}  // namespace base

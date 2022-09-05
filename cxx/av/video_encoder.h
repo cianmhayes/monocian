@@ -1,7 +1,10 @@
-#ifndef TOOLS_FERRY_VIDEO_ENCODER_H
-#define TOOLS_FERRY_VIDEO_ENCODER_H
+#ifndef AV_VIDEO_ENCODER_H
+#define AV_VIDEO_ENCODER_H
 
+#include <memory>
 #include <vector>
+
+#include "base/storage/writer.h"
 
 struct AVCodec;
 struct AVCodecContext;
@@ -11,13 +14,18 @@ struct AVIOContext;
 struct AVPacket;
 struct AVStream;
 struct SwsContext;
-class Writer;
+
+namespace av {
 
 void enable_av_logging();
 
 class VideoEncoder {
  public:
-  VideoEncoder(Writer* writer, int fps, int width, int height, int bitrate);
+  VideoEncoder(std::unique_ptr<base::storage::Writer> writer,
+               int fps,
+               int width,
+               int height,
+               int bitrate);
   ~VideoEncoder();
   VideoEncoder(const VideoEncoder&) = delete;
   VideoEncoder& operator=(const VideoEncoder&) = delete;
@@ -31,7 +39,7 @@ class VideoEncoder {
  private:
   bool DrainPackets();
 
-  Writer* writer_;
+  std::unique_ptr<base::storage::Writer> writer_;
   int fps_;
   int width_;
   int height_;
@@ -50,4 +58,6 @@ class VideoEncoder {
   AVFrame* frame_;
 };
 
-#endif  // TOOLS_FERRY_VIDEO_ENCODER_H
+}  // namespace av
+
+#endif  // AV_VIDEO_ENCODER_H

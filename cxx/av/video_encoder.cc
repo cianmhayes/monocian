@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include <glog/logging.h>
+#include "base/storage/writer.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -12,13 +13,12 @@ extern "C" {
 #include <libswscale/swscale.h>
 }
 
-#include "storage/writer.h"
-
 #define RNDTO2(X) ( ( (X) & 0xFFFFFFFE )
 #define RNDTO32(X) (((X) % 32) ? (((X) + 32) & 0xFFFFFFE0) : (X))
 
 static int WriteCallback(void* opaque, uint8_t* buf, int buf_size) {
-  Writer* writer = reinterpret_cast<Writer*>(opaque);
+  base::storage::Writer* writer =
+      reinterpret_cast<base::storage::Writer*>(opaque);
   writer->Write((uint8_t*)buf, buf_size);
   return buf_size;
 }
@@ -27,17 +27,19 @@ void log_callback(void* ptr, int level, const char* fmt, va_list vargs) {
   printf("\n%s", fmt);
 }
 
+namespace av {
+
 void enable_av_logging() {
   av_log_set_level(AV_LOG_VERBOSE);
   av_log_set_callback(log_callback);
 }
 
-VideoEncoder::VideoEncoder(Writer* writer,
+VideoEncoder::VideoEncoder(std::unique_ptr<base::storage::Writer> writer,
                            int fps,
                            int width,
                            int height,
                            int bitrate)
-    : writer_(writer),
+    : writer_(std::move(writer)),
       fps_(fps),
       width_(width),
       height_(height),
@@ -103,8 +105,8 @@ bool VideoEncoder::Init() {
 
   int io_mode = 1;  // 0 for reading, 1 for writing
   avio_output_ctx_ = avio_alloc_context(ctx_buffer, buffer_size, io_mode,
-                                        reinterpret_cast<void*>(writer_), NULL,
-                                        &WriteCallback, NULL);
+                                        reinterpret_cast<void*>(writer_.get()),
+                                        NULL, &WriteCallback, NULL);
 
   ret = avformat_alloc_output_context2(&output_ctx_, NULL, "asf",
                                        "placeholder_filename");
@@ -259,3 +261,5 @@ bool VideoEncoder::DrainPackets() {
   }
   return true;
 }
+
+}  // namespace av

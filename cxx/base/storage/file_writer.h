@@ -1,9 +1,11 @@
-#ifndef STORAGE_FILE_WRITER_H_
-#define STORAGE_FILE_WRITER_H_
+#ifndef BASE_STORAGE_FILE_WRITER_H_
+#define BASE_STORAGE_FILE_WRITER_H_
 
 #include <fstream>
-
 #include "writer.h"
+
+namespace base {
+namespace storage {
 
 class FileWriter : public Writer {
  public:
@@ -20,4 +22,7 @@ class FileWriter : public Writer {
   std::ofstream output_file_;
 };
 
-#endif  // TOOLS_FERRY_FILE_WRITER_H
+}  // namespace storage
+}  // namespace base
+
+#endif  // BASE_STORAGE_FILE_WRITER_H_

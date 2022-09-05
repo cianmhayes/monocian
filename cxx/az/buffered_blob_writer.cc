@@ -1,15 +1,17 @@
 #include "buffered_blob_writer.h"
 
+#include <glog/logging.h>
+#include <azure/core.hpp>
+#include <azure/storage/blobs.hpp>
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <azure/core.hpp>
-#include <azure/storage/blobs.hpp>
-#include <glog/logging.h>
 
 using namespace Azure::Storage;
 using namespace Azure::Storage::Blobs;
 using namespace Azure::Core::IO;
+
+namespace az {
 
 BufferedBlobWriter::BufferedBlobWriter(const std::string& connection_string,
                                        const std::string& container,
@@ -41,16 +43,19 @@ void BufferedBlobWriter::SendBytes() {
     if (blobCreateResponse.RawResponse) {
       LOG(INFO) << "BufferedBlobWriter::" << __FUNCTION__ << "\t"
                 << "Response to creation check on " << blob_name_ << " : "
-                << static_cast<int>(blobCreateResponse.RawResponse.get()->GetStatusCode());
+                << static_cast<int>(
+                       blobCreateResponse.RawResponse.get()->GetStatusCode());
     } else {
       LOG(INFO) << "BufferedBlobWriter::" << __FUNCTION__ << "\t"
                 << "Missing response from AppendBlobClient::CreateIfNotExists";
     }
-    auto appendResponse = blob_client_.AppendBlock(MemoryBodyStream(pending_bytes_));
+    auto appendResponse =
+        blob_client_.AppendBlock(MemoryBodyStream(pending_bytes_));
     if (appendResponse.RawResponse) {
       LOG(INFO) << "BufferedBlobWriter::" << __FUNCTION__ << "\t"
                 << "Response to append block on " << blob_name_ << " : "
-                << static_cast<int>(appendResponse.RawResponse.get()->GetStatusCode());
+                << static_cast<int>(
+                       appendResponse.RawResponse.get()->GetStatusCode());
     } else {
       LOG(INFO) << "BufferedBlobWriter::" << __FUNCTION__ << "\t"
                 << "Missing response from AppendBlobClient::AppendBlock";
@@ -58,3 +63,5 @@ void BufferedBlobWriter::SendBytes() {
     pending_bytes_.clear();
   }
 }
+
+}  // namespace az

@@ -1,12 +1,13 @@
-#ifndef STORAGE_BUFFERED_BLOB_WRITER_H_
-#define STORAGE_BUFFERED_BLOB_WRITER_H_
+#ifndef AZ_BUFFERED_BLOB_WRITER_H_
+#define AZ_BUFFERED_BLOB_WRITER_H_
 
 #include <string>
 #include <vector>
+#include "base/storage/writer.h"
 
-#include "writer.h"
+namespace az {
 
-class BufferedBlobWriter : public Writer {
+class BufferedBlobWriter : public base::storage::Writer {
  public:
   BufferedBlobWriter(const std::string& connection_string,
                      const std::string& container,
@@ -21,7 +22,6 @@ class BufferedBlobWriter : public Writer {
   void Close() override;
 
  private:
-
   void SendBytes();
 
   std::string connection_string_;
@@ -31,4 +31,6 @@ class BufferedBlobWriter : public Writer {
   std::vector<uint8_t> pending_bytes_;
 };
 
-#endif // STORAGE_BUFFERED_BLOB_WRITER_H_
+}  // namespace az
+
+#endif  // AZ_BUFFERED_BLOB_WRITER_H_

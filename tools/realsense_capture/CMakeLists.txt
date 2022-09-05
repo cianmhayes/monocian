@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 add_executable(realsense_capture
-               main.cc
-               video_encoder.cc
-               video_encoding_queue.cc)
+               main.cc)
 
 target_include_directories(
     realsense_capture PUBLIC
@@ -13,8 +11,10 @@ target_include_directories(
 target_link_libraries(realsense_capture
                       glfw
                       opengl32
+                      mc_av
+                      mc_az
+                      mc_base
                       mc_ogl
-                      mc_storage
                       ${FFMPEG_LIBRARIES}
                       Azure::azure-storage-blobs
                       realsense2::realsense2
