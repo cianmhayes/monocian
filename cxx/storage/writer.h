@@ -1,5 +1,5 @@
-#ifndef TOOLS_FERRY_WRITER_H
-#define TOOLS_FERRY_WRITER_H
+#ifndef STORAGE_WRITER_H_
+#define STORAGE_WRITER_H_
 
 class Writer {
  public:
@@ -8,4 +8,4 @@ class Writer {
   virtual void Close() = 0;
 };
 
-#endif  // TOOLS_FERRY_WRITER_H
+#endif  // STORAGE_WRITER_H_

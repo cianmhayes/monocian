@@ -5,4 +5,4 @@ add_library(
   stb_impl.cc
 )
 
-target_include_directories(stb_impl PUBLIC ../../third_party/stb)
+target_include_directories(stb_impl PUBLIC ../stb)

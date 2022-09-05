@@ -2,45 +2,24 @@
 #include "video_encoder.h"
 
 VideoEncodingQueue::VideoEncodingQueue(VideoEncoder* encoder)
-    : encoder_(encoder), running_(false) {}
+    : encoder_(encoder) {}
 
 VideoEncodingQueue::~VideoEncodingQueue() {}
 
-void VideoEncodingQueue::Start() {
-  if (!running_) {
+bool VideoEncodingQueue::Startup() {
+  if (encoder_) {
     encoder_->Init();
-    running_ = true;
-    processing_thread_ = std::thread([this] { ProcessingThread(); });
+    return true;
+  }
+  return false;
+}
+
+void VideoEncodingQueue::Shutdown() {
+  if (encoder_) {
+    encoder_->Stop();
   }
 }
 
-void VideoEncodingQueue::Stop() {
-  running_ = false;
-  cv_.notify_one();
-  if (processing_thread_.joinable()) {
-    processing_thread_.join();
-  }
-  encoder_->Stop();
-}
-
-void VideoEncodingQueue::AddFrame(std::vector<uint8_t> frame) {
-  {
-    std::unique_lock<decltype(m_)> lock(m_);
-    q_.push_back(std::move(frame));
-  }
-  cv_.notify_one();
-}
-
-void VideoEncodingQueue::ProcessingThread() {
-  while (running_) {
-    std::list<std::vector<uint8_t>> popped;
-    {
-      std::unique_lock<decltype(m_)> lock(m_);
-      cv_.wait(lock, [this] { return !q_.empty() || !running_; });
-      if (!q_.empty()) {
-        popped.splice(popped.begin(), q_, q_.begin());
-      }
-    }
-    encoder_->AddFrame(popped.front());
-  }
+void VideoEncodingQueue::ProcessItem(std::vector<uint8_t>&& item) {
+  encoder_->AddFrame(item);
 }

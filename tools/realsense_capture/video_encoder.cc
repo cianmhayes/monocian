@@ -12,7 +12,7 @@ extern "C" {
 #include <libswscale/swscale.h>
 }
 
-#include "writer.h"
+#include "storage/writer.h"
 
 #define RNDTO2(X) ( ( (X) & 0xFFFFFFFE )
 #define RNDTO32(X) (((X) % 32) ? (((X) + 32) & 0xFFFFFFE0) : (X))

@@ -1,5 +1,5 @@
-#ifndef TOOLS_FERRY_FILE_WRITER_H
-#define TOOLS_FERRY_FILE_WRITER_H
+#ifndef STORAGE_FILE_WRITER_H_
+#define STORAGE_FILE_WRITER_H_
 
 #include <fstream>
 
@@ -12,9 +12,9 @@ class FileWriter : public Writer {
   FileWriter(const FileWriter&) = delete;
   FileWriter& operator=(const FileWriter&) = delete;
 
-  virtual void Write(uint8_t* data, size_t size) override;
+  void Write(uint8_t* data, size_t size) override;
 
-  virtual void Close() override;
+  void Close() override;
 
  private:
   std::ofstream output_file_;

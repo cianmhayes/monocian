@@ -1,5 +1,5 @@
-#ifndef TOOLS_FERRY_BROADCAST_WRITER_H
-#define TOOLS_FERRY_BROADCAST_WRITER_H
+#ifndef STORAGE_BROADCAST_WRITER_H_
+#define STORAGE_BROADCAST_WRITER_H_
 
 #include <memory>
 #include <vector>
@@ -20,4 +20,4 @@ class BroadcastWriter : public Writer {
   std::vector<std::unique_ptr<Writer>> internal_writers_;
 };
 
-#endif  // TOOLS_FERRY_BROADCAST_WRITER_H
+#endif  // STORAGE_BROADCAST_WRITER_H_

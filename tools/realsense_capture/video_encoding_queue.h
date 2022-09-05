@@ -1,36 +1,25 @@
 #ifndef TOOLS_FERRY_VIDEO_ENCODING_QUEUE_H
 #define TOOLS_FERRY_VIDEO_ENCODING_QUEUE_H
 
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <thread>
-#include <vector>
+#include "base/async_processing_queue.h"
 
 class VideoEncoder;
 
-class VideoEncodingQueue {
+class VideoEncodingQueue : public base::AsyncProcessingQueueBase<std::vector<uint8_t>> {
  public:
   VideoEncodingQueue(VideoEncoder* encoder);
-  ~VideoEncodingQueue();
+  ~VideoEncodingQueue() override;
   VideoEncodingQueue(const VideoEncodingQueue&) = delete;
   VideoEncodingQueue& operator=(const VideoEncodingQueue&) = delete;
 
-  void Start();
+ protected:
+  bool Startup() override;
 
-  void AddFrame(std::vector<uint8_t> frame);
+  void Shutdown() override;
 
-  void Stop();
-
- private:
-  void ProcessingThread();
+  void ProcessItem(std::vector<uint8_t>&& item) override;
 
   VideoEncoder* encoder_;
-  bool running_;
-  std::list<std::vector<uint8_t>> q_;
-  mutable std::mutex m_;
-  std::condition_variable cv_;
-  std::thread processing_thread_;
 };
 
 #endif  // TOOLS_FERRY_VIDEO_ENCODING_QUEUE_H

@@ -29,13 +29,6 @@ void BufferedBlobWriter::Write(uint8_t* data, size_t size) {
   }
 }
 
-void BufferedBlobWriter::Write(const std::vector<uint8_t>& chunk) {
-  std::copy(chunk.begin(), chunk.end(), std::back_inserter(pending_bytes_));
-  if (pending_bytes_.size() > max_chunk_size_bytes_) {
-    SendBytes();
-  }
-}
-
 void BufferedBlobWriter::Close() {
   SendBytes();
 }

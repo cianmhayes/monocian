@@ -10,10 +10,11 @@
 
 #include "ogl/full_screen_video.h"
 #include "ogl/window.h"
+#include "ogl/constants.h"
+#include "storage/broadcast_writer.h"
+#include "storage/buffered_blob_writer.h"
+#include "storage/file_writer.h"
 
-#include "broadcast_writer.h"
-#include "buffered_blob_writer.h"
-#include "file_writer.h"
 #include "video_encoder.h"
 #include "video_encoding_queue.h"
 
@@ -153,12 +154,34 @@ int main(int argc, char* argv[]) {
 
   depth_queue.Start();
   color_queue.Start();
+
+  bool show_video = true;
+  bool* show_video_ptr = &show_video;
+
+  app.AddKeyReleasedCallback([&show_video_ptr](ogl::Window* window, int32_t key) {
+    switch(key) {
+      case OGL_KEY_ESCAPE:
+        window->SetShouldClose(true);
+        break;
+      case OGL_KEY_D:
+        *show_video_ptr = !(*show_video_ptr);
+        break;
+    }
+  });
+
+  rs2::colorizer colourizer;
   ogl::FullScreenVideo video(&app);
   while (app.FrameStart()) {
     rs2::frameset frames = pipe.wait_for_frames();
-    video.RenderFrame(frames.get_color_frame(), ogl::FrameFormat::RGB_8);
-
     rs2::depth_frame df = frames.get_depth_frame();
+    rs2::video_frame vf = frames.get_color_frame();
+
+    if (show_video) {
+      video.RenderFrame(vf, ogl::FrameFormat::RGB_8);
+    } else {
+      video.RenderFrame(df.apply_filter(colourizer).as<rs2::video_frame>(), ogl::FrameFormat::RGB_8);
+    }
+
     if (df.get_data_size() > 0) {
       const uint8_t* raw_depth_data =
           static_cast<const uint8_t*>(df.get_data());
@@ -176,13 +199,13 @@ int main(int argc, char* argv[]) {
         // the red channel, and the odd least significant bytes will form the
         // blue channel.
         int o = i * 2;
-        int g1 = raw_depth_data[o + 1];
-        int g2 = raw_depth_data[o + 3];
+        uint8_t g1 = raw_depth_data[o + 1];
+        uint8_t g2 = raw_depth_data[o + 3];
 
-        int r1 = raw_depth_data[o + 0];
-        int r2 = raw_depth_data[o + 0];
-        int b1 = raw_depth_data[o + 2];
-        int b2 = raw_depth_data[o + 2];
+        uint8_t r1 = raw_depth_data[o + 0];
+        uint8_t r2 = raw_depth_data[o + 0];
+        uint8_t b1 = raw_depth_data[o + 2];
+        uint8_t b2 = raw_depth_data[o + 2];
 
         o = i * 3;
         depth_data[o + 0] = r1;
@@ -193,17 +216,16 @@ int main(int argc, char* argv[]) {
         depth_data[o + 4] = g2;
         depth_data[o + 5] = b2;
       }
-      depth_queue.AddFrame(std::move(depth_data));
+      depth_queue.Add(std::move(depth_data));
     }
 
-    rs2::video_frame vf = frames.get_color_frame();
     if (vf.get_data_size() > 0) {
       const uint8_t* raw_color_data =
           static_cast<const uint8_t*>(vf.get_data());
       std::vector<uint8_t> color_data;
       std::copy_n(raw_color_data, vf.get_data_size(),
                   std::back_inserter(color_data));
-      color_queue.AddFrame(std::move(color_data));
+      color_queue.Add(std::move(color_data));
     }
   };
   depth_queue.Stop();

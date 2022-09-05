@@ -1,5 +1,5 @@
-#ifndef TOOLS_FERRY_BUFFERED_BLOB_WRITER_H
-#define TOOLS_FERRY_BUFFERED_BLOB_WRITER_H
+#ifndef STORAGE_BUFFERED_BLOB_WRITER_H_
+#define STORAGE_BUFFERED_BLOB_WRITER_H_
 
 #include <string>
 #include <vector>
@@ -16,11 +16,9 @@ class BufferedBlobWriter : public Writer {
   BufferedBlobWriter(const BufferedBlobWriter&) = delete;
   BufferedBlobWriter& operator=(const BufferedBlobWriter&) = delete;
 
-  virtual void Write(uint8_t* data, size_t size) override;
+  void Write(uint8_t* data, size_t size) override;
 
-  void Write(const std::vector<uint8_t>& chunk);
-
-  virtual void Close() override;
+  void Close() override;
 
  private:
 
@@ -33,4 +31,4 @@ class BufferedBlobWriter : public Writer {
   std::vector<uint8_t> pending_bytes_;
 };
 
-#endif // TOOLS_FERRY_BUFFERED_BLOB_WRITER_H
+#endif // STORAGE_BUFFERED_BLOB_WRITER_H_

@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.22)
 
 add_executable(realsense_capture
                main.cc
-               file_writer.cc
-               broadcast_writer.cc
-               buffered_blob_writer.cc
                video_encoder.cc
                video_encoding_queue.cc)
 
@@ -17,6 +14,7 @@ target_link_libraries(realsense_capture
                       glfw
                       opengl32
                       mc_ogl
+                      mc_storage
                       ${FFMPEG_LIBRARIES}
                       Azure::azure-storage-blobs
                       realsense2::realsense2
