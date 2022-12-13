@@ -5,6 +5,7 @@ add_library(
     camera.cc
     full_screen_video.cc
     shader.cc
+    simple_mesh.cc
     window.cc)
 
 target_include_directories(
