@@ -1,8 +1,11 @@
 .vscode
-build
-secret.json
-3rdparty
-output
-
 .venv
 __pycache__
+
+build
+output
+tmp
+
+.env
+secret.json
+
