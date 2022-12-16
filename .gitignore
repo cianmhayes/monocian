@@ -5,6 +5,8 @@ __pycache__
 build
 output
 tmp
+output
+wandb
 
 .env
 secret.json
