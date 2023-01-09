@@ -1,0 +1,12 @@
+<html>
+<head>
+</head>
+<body>
+{% for c in clusters %}
+<h1>Cluster {{ loop.index0 }} </h1>
+{% for img in c %}
+<img src="{{ img }}"/>
+{% endfor %}
+{% endfor %}
+</body>
+</html>
