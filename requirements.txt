@@ -6,6 +6,7 @@ diffusers==0.10.2
 python-dotenv==0.21.0
 pillow==9.3.0
 pyarrow==10.0.1
+scikit-learn==1.2.0
 timm==0.6.12
 tqdm==4.64.1
 transformers==4.25.1
