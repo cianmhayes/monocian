@@ -130,7 +130,7 @@ def generate_clustering_model_report(
     clustered_output = list([[] for i in range(cm.n_clusters())])
     max_samples = 100
     for (p, t) in tqdm(validation_set.items()):
-        cluster = cm.predict(t)[0]
+        cluster = cm.predict(torch.unsqueeze(t, 0))[0]
         assert cluster < len(clustered_output)
         if len(clustered_output[cluster]) < max_samples:
             clustered_output[cluster].append(p)
