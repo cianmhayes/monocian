@@ -15,22 +15,27 @@ def rearrange(x: torch.Tensor) -> torch.Tensor:
 
 
 class PatchFeaturizer(torch.nn.Module):
-    def __init__(self) -> None:
+    def __init__(self, input_patch_size=32) -> None:
         super().__init__()
         self.feature_output = "features.30"
         self.output_feature_name = "vgg16_feature30"
         m = vgg16(weights=VGG16_Weights.DEFAULT)
         self.extractor = create_feature_extractor(m, return_nodes=[self.feature_output])
+        if input_patch_size != 32:
+            self.upsample = torch.nn.Upsample(size=(32,32), mode="bilinear")
 
     def feature_name(self):
         return self.output_feature_name
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         assert len(x.shape) == 4
+        if x.shape[1] == 1:
+            x = torch.tile(x, (1, 3, 1, 1))
+            #x = torch.cat((x,x,x), 1)
+        if self.upsample:
+            x = self.upsample(x)
         assert x.shape[2] % 32 == 0
         assert x.shape[3] % 32 == 0
-        if x.shape[1] == 1:
-            x= torch.cat((x,x,x), 1)
         assert x.shape[1] == 3
         f = self.extractor(x)[self.feature_output]
         return rearrange(f)
