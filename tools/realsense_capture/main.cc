@@ -8,6 +8,7 @@
 #include <librealsense2/rs.hpp>
 #include <tuple>
 
+#include "av/depth_encoding.h"
 #include "av/frame_rate_tracker.h"
 #include "av/video_encoder.h"
 #include "av/video_encoding_queue.h"
@@ -125,10 +126,10 @@ int main(int argc, char* argv[]) {
   std::vector<std::unique_ptr<base::storage::Writer>> depth_writers = {};
   std::vector<std::unique_ptr<base::storage::Writer>> color_writers = {};
   if (settings.write_to_file) {
-    depth_writers.push_back(
-        std::make_unique<base::storage::FileWriter>(("depth_" + timestamp + ".asf").c_str()));
-    color_writers.push_back(
-        std::make_unique<base::storage::FileWriter>(("color_" + timestamp + ".asf").c_str()));
+    depth_writers.push_back(std::make_unique<base::storage::FileWriter>(
+        ("depth_" + timestamp + ".asf").c_str()));
+    color_writers.push_back(std::make_unique<base::storage::FileWriter>(
+        ("color_" + timestamp + ".asf").c_str()));
   }
   if (settings.write_to_service) {
     std::string depth_blob_name =
@@ -144,11 +145,13 @@ int main(int argc, char* argv[]) {
   }
 
   av::VideoEncodingQueue depth_queue(
-      std::make_unique<base::storage::BroadcastWriter>(std::move(depth_writers)), 30, 848, 480,
-      settings.depth_bitrate_bps);
+      std::make_unique<base::storage::BroadcastWriter>(
+          std::move(depth_writers)),
+      30, 848, 480, settings.depth_bitrate_bps);
   av::VideoEncodingQueue color_queue(
-      std::make_unique<base::storage::BroadcastWriter>(std::move(color_writers)), 30, 1280,
-      720, settings.color_bitrate_bps);
+      std::make_unique<base::storage::BroadcastWriter>(
+          std::move(color_writers)),
+      30, 1280, 720, settings.color_bitrate_bps);
 
   depth_queue.Start();
   color_queue.Start();
@@ -184,45 +187,15 @@ int main(int argc, char* argv[]) {
       video.RenderFrame(df.apply_filter(colourizer).as<rs2::video_frame>(),
                         ogl::FrameFormat::RGB_8);
     }
-    std::string fps_message = std::to_string(frame_rate_tracker.get_fps()) + " fps";
+    std::string fps_message =
+        std::to_string(frame_rate_tracker.get_fps()) + " fps";
     fps_overlay.SetContent(fps_message);
     fps_overlay.Render();
 
     if (df.get_data_size() > 0) {
-      const uint8_t* raw_depth_data =
-          static_cast<const uint8_t*>(df.get_data());
-      int source_data_size = df.get_data_size();
-      int data_stride = df.get_stride_in_bytes();
-      int depth_width = df.get_width();
-      int depth_height = df.get_height();
-      std::vector<uint8_t> depth_data(depth_width * depth_height * 3);
-      for (int i = 0; i < depth_width * depth_height; i += 2) {
-        // We want to prepare an RGB frame from 16bit depth data so that it will
-        // preserve as much detail as possible when converted to YUV.
-        // Given a pair of 16bit depth pixels, split each into most and least
-        // significant bytes. Set the green channel to the most significant bit
-        // which will become Y. Then the even least significant bytes will form
-        // the red channel, and the odd least significant bytes will form the
-        // blue channel.
-        int o = i * 2;
-        uint8_t g1 = raw_depth_data[o + 1];
-        uint8_t g2 = raw_depth_data[o + 3];
-
-        uint8_t r1 = raw_depth_data[o + 0];
-        uint8_t r2 = raw_depth_data[o + 0];
-        uint8_t b1 = raw_depth_data[o + 2];
-        uint8_t b2 = raw_depth_data[o + 2];
-
-        o = i * 3;
-        depth_data[o + 0] = r1;
-        depth_data[o + 1] = g1;
-        depth_data[o + 2] = b1;
-
-        depth_data[o + 3] = r2;
-        depth_data[o + 4] = g2;
-        depth_data[o + 5] = b2;
-      }
-      depth_queue.Add(std::move(depth_data));
+      depth_queue.Add(
+          std::move(av::DepthToRGB(static_cast<const uint8_t*>(df.get_data()),
+                                   df.get_width(), df.get_height())));
     }
 
     if (vf.get_data_size() > 0) {

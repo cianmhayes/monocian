@@ -4,6 +4,7 @@ enable_testing()
 
 add_executable(
   unit_tests
+  av/depth_encoding_test.cc
   base/graph_test.cc
   base/merge_test.cc
   selective_search/selective_search_test.cc
@@ -16,6 +17,7 @@ target_include_directories(
 target_link_libraries(
   unit_tests
   GTest::gtest_main
+  mc_av
   mc_base
   mc_selective_search
 )
