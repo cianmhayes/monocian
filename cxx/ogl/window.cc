@@ -95,6 +95,10 @@ void Window::SetMouseCursorMode(MouseCursorMode mode) {
   }
 }
 
+void Window::SetTitle(const std::string& new_title) {
+  glfwSetWindowTitle(glfw_window_, new_title.c_str());
+}
+
 bool Window::FrameStart() {
   if (!IsValid()) {
     return false;

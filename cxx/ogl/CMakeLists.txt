@@ -6,6 +6,7 @@ add_library(
     full_screen_video.cc
     shader.cc
     simple_mesh.cc
+    text_overlay_renderer.cc
     window.cc)
 
 target_include_directories(

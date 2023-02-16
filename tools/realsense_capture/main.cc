@@ -8,6 +8,7 @@
 #include <librealsense2/rs.hpp>
 #include <tuple>
 
+#include "av/frame_rate_tracker.h"
 #include "av/video_encoder.h"
 #include "av/video_encoding_queue.h"
 #include "az/buffered_blob_writer.h"
@@ -15,6 +16,7 @@
 #include "base/storage/file_writer.h"
 #include "ogl/constants.h"
 #include "ogl/full_screen_video.h"
+#include "ogl/text_overlay_renderer.h"
 #include "ogl/window.h"
 
 namespace ogl {
@@ -110,7 +112,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  ogl::Window app(1280, 720, "Ferry", true);
+  ogl::Window app(1280, 720, "Ferry - Recording!", true);
 
   rs2::pipeline pipe;
   rs2::config config;
@@ -168,7 +170,10 @@ int main(int argc, char* argv[]) {
 
   rs2::colorizer colourizer;
   ogl::FullScreenVideo video(&app);
+  av::FrameRateTracker frame_rate_tracker(200);
+  ogl::TextOverlayRenderer fps_overlay(&app, 0.02, 0.04, "");
   while (app.FrameStart()) {
+    frame_rate_tracker.notify_frame_start();
     rs2::frameset frames = pipe.wait_for_frames();
     rs2::depth_frame df = frames.get_depth_frame();
     rs2::video_frame vf = frames.get_color_frame();
@@ -179,6 +184,9 @@ int main(int argc, char* argv[]) {
       video.RenderFrame(df.apply_filter(colourizer).as<rs2::video_frame>(),
                         ogl::FrameFormat::RGB_8);
     }
+    std::string fps_message = std::to_string(frame_rate_tracker.get_fps()) + " fps";
+    fps_overlay.SetContent(fps_message);
+    fps_overlay.Render();
 
     if (df.get_data_size() > 0) {
       const uint8_t* raw_depth_data =
@@ -226,6 +234,7 @@ int main(int argc, char* argv[]) {
       color_queue.Add(std::move(color_data));
     }
   };
+  app.SetTitle("Ferry - Saving recording . . .");
   depth_queue.Stop();
   color_queue.Stop();
 
