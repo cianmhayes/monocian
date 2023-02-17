@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
 add_library(
   mc_av
-  depth_encoding.cc
   frame_rate_tracker.cc
   video_encoder.cc
   video_encoding_queue.cc

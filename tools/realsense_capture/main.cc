@@ -8,7 +8,6 @@
 #include <librealsense2/rs.hpp>
 #include <tuple>
 
-#include "av/depth_encoding.h"
 #include "av/frame_rate_tracker.h"
 #include "av/video_encoder.h"
 #include "av/video_encoding_queue.h"
@@ -92,6 +91,17 @@ FerrySettings ReadSettings(const std::string& settings_path) {
   }
 
   return settings;
+};
+
+void AddFrameToQueue(av::VideoEncodingQueue& q, rs2::video_frame& vf) {
+    if (vf.get_data_size() > 0) {
+      const uint8_t* raw_color_data =
+          static_cast<const uint8_t*>(vf.get_data());
+      std::vector<uint8_t> color_data;
+      std::copy_n(raw_color_data, vf.get_data_size(),
+                  std::back_inserter(color_data));
+      q.Add(std::move(color_data));
+    }
 };
 
 int main(int argc, char* argv[]) {
@@ -181,31 +191,21 @@ int main(int argc, char* argv[]) {
     rs2::depth_frame df = frames.get_depth_frame();
     rs2::video_frame vf = frames.get_color_frame();
 
+    rs2::video_frame colorized_frame = df.apply_filter(colourizer).as<rs2::video_frame>();
+
     if (show_video) {
       video.RenderFrame(vf, ogl::FrameFormat::RGB_8);
     } else {
-      video.RenderFrame(df.apply_filter(colourizer).as<rs2::video_frame>(),
-                        ogl::FrameFormat::RGB_8);
+      video.RenderFrame(colorized_frame, ogl::FrameFormat::RGB_8);
     }
+
+    AddFrameToQueue(depth_queue, colorized_frame);
+    AddFrameToQueue(color_queue, vf);
+
     std::string fps_message =
         std::to_string(frame_rate_tracker.get_fps()) + " fps";
     fps_overlay.SetContent(fps_message);
     fps_overlay.Render();
-
-    if (df.get_data_size() > 0) {
-      depth_queue.Add(
-          std::move(av::DepthToRGB(static_cast<const uint8_t*>(df.get_data()),
-                                   df.get_width(), df.get_height())));
-    }
-
-    if (vf.get_data_size() > 0) {
-      const uint8_t* raw_color_data =
-          static_cast<const uint8_t*>(vf.get_data());
-      std::vector<uint8_t> color_data;
-      std::copy_n(raw_color_data, vf.get_data_size(),
-                  std::back_inserter(color_data));
-      color_queue.Add(std::move(color_data));
-    }
   };
   app.SetTitle("Ferry - Saving recording . . .");
   depth_queue.Stop();
