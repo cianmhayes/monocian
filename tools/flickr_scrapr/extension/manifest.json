@@ -1,0 +1,31 @@
+{
+    "manifest_version": 3,
+    "name": "Flickr Scrapr",
+    "version": "1.0.1",
+    "description": "Scrape Flickr pages",
+    "action": {
+        "default_title": "Scrape"
+    },
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*.flickr.com/*"
+            ],
+            "run_at": "document_idle",
+            "js": [
+                "content.js"
+            ]
+        }
+    ],
+    "host_permissions": [
+        "http://localhost:5000/*"
+    ]
+}
