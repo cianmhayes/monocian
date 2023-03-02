@@ -16,6 +16,7 @@ target_include_directories(
 target_link_libraries(
   unit_tests
   GTest::gtest_main
+  mc_av
   mc_base
   mc_selective_search
 )

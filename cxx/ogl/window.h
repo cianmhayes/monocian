@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <map>
+#include <string>
 
 struct GLFWwindow;
 
@@ -44,6 +45,8 @@ class Window {
   void SwapBuffers();
   bool IsKeyPressed(int32_t key);
   void SetMouseCursorMode(MouseCursorMode mode);
+
+  void SetTitle(const std::string& new_title);
 
   bool FrameStart();
   void FrameEnd();
