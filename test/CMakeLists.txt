@@ -6,6 +6,7 @@ add_executable(
   unit_tests
   base/graph_test.cc
   base/merge_test.cc
+  rt/vec3_test.cc
   selective_search/selective_search_test.cc
 )
 
@@ -18,6 +19,7 @@ target_link_libraries(
   GTest::gtest_main
   mc_av
   mc_base
+  mc_rt
   mc_selective_search
 )
 

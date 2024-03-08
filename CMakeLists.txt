@@ -13,6 +13,7 @@ find_package(jsoncpp CONFIG REQUIRED)
 find_package(realsense2 CONFIG REQUIRED)
 
 add_subdirectory(learn_open_gl)
+add_subdirectory(learn_raytracing)
 add_subdirectory(cxx)
 add_subdirectory(test)
 add_subdirectory(third_party)
